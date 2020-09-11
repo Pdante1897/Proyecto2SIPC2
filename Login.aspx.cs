@@ -12,7 +12,7 @@ namespace Proyecto2SIPC2
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            Session.Clear();
         }
         protected Boolean IniciarSesion(String usuario, String contrasenia) 
         {
@@ -49,8 +49,16 @@ namespace Proyecto2SIPC2
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-                            Page.ClientScript.RegisterClientScriptBlock(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Usuario o Contrasenia incorrectas!" + "');</script>");
+            if (IniciarSesion(TextBox1.Text, TextBox2.Text))
+            {
+                Response.Redirect("Menu.aspx");
+            }
+            else 
+            {
+                TextBox2.Text = null;
+                ClientScript.RegisterClientScriptBlock(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Usuario o Contrasenia incorrectas!" + "');</script>");
 
+            }
         }
     }
 }

@@ -18,6 +18,7 @@
         <label for="password">Password</label>
         <asp:TextBox ID="TextBox2" runat="server"  placeholder="Ingrese Password"></asp:TextBox>
         <asp:Button ID="Button1" runat="server" Text="Login" OnClick="Button1_Click" />
+        <a style="color: white; text-align: center; display: inline-block; width: 100%; " runat="server" href="Registro">Registrarse</a>
     </form>
 </div>
     </form>
