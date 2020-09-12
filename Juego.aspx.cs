@@ -7,12 +7,11 @@ using System.Web.UI.WebControls;
 
 namespace Proyecto2SIPC2
 {
-    public partial class Menu : System.Web.UI.Page
+    public partial class Juego : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Button1.BackColor = System.Drawing.Color.Blue;
-            
+
         }
     }
 }
