@@ -28,12 +28,9 @@ namespace Proyecto2SIPC2
 
             Button button = sender as Button;
             button.Attributes.Add("style", "border-radius: 100%; background-color: Black;");
-  
+
         }
 
-        protected void Button3_Click1(object sender, EventArgs e)
-        {
-            Button1.Attributes.Clear()
-        }
+        
     }
 }

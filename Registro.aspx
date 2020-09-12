@@ -27,19 +27,12 @@
                 <label for="fecha">Fecha de nacimiento</label>
                 <asp:TextBox ID="TextBox6" type="date" placeholder="dd/mm/aa" runat="server"></asp:TextBox>
                 <label for="country">Elija pais:</label>
-                <select class="combo" id="pais" name="pais">
-                    <option value="Guatemala">Guatemala</option>
-                    <option value="E">Estados Unidos</option>
-                    <option value="peru">Peru</option>
-                    <option value="elS">El Salvador</option>
-                    <option value="canada">Canada</option>
-                    <option value="it">Italia</option>
-                </select>
+                <asp:TextBox ID="TextBox7"  placeholder="Ingrese pais" runat="server"></asp:TextBox>
                 <p></p>
-                <input type="submit" value="Registrar" id="login">
-                <img src="../Img/facebook.jpg" style="width: 85px; height: 55px; position: absolute; left: 15%; top: 90%;">
-                <img src="../Img/circleicon-googleplus-white.png" style="width: 40px; height: 40px; position: absolute; left: 45%; top: 91%;" ;>
-                <img src="../Img/twitter.png" style="width: 40px; height: 40px; position: absolute; left: 70%; top: 91%;">
+                <asp:Button ID="Button1" runat="server" Text="Registrar" OnClick="Button1_Click"/>
+                <img src="../Img/facebook.jpg" style="width: 85px; height: 55px; position: absolute; left: 15%; top: 93%;">
+                <img src="../Img/circleicon-googleplus-white.png" style="width: 40px; height: 40px; position: absolute; left: 45%; top: 94%;" ;>
+                <img src="../Img/twitter.png" style="width: 40px; height: 40px; position: absolute; left: 70%; top: 94%;">
 
     </form>
 </div>
