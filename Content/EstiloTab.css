@@ -1,5 +1,8 @@
 ﻿.body {
 }
+.cuadroB button {
+    background-color: transparent;
+}
 
 .cafe h1 {
     text-align: center;

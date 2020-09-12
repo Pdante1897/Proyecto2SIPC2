@@ -11,7 +11,29 @@ namespace Proyecto2SIPC2
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+        }
 
+        protected void Pulsar(String hola) 
+        {
+            ClientScript.RegisterClientScriptBlock(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Usuario o Contrasenia incorrectas!" + "');</script>");
+
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+
+        }
+        public void Click(object sender, EventArgs args)
+        {
+
+            Button button = sender as Button;
+            button.Attributes.Add("style", "border-radius: 100%; background-color: Black;");
+  
+        }
+
+        protected void Button3_Click1(object sender, EventArgs e)
+        {
+            Button1.Attributes.Clear()
         }
     }
 }
