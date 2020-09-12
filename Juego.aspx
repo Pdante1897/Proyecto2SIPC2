@@ -302,7 +302,7 @@
        </div>
         <div class="flotar">
 
-            <div class="Cafe flotar">
+            <div class="cafe flotar">
 
             </div>
             <div class="cuadroB flotar">
