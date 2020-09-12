@@ -1,21 +1,23 @@
 ﻿.body {
 }
 
-
-
+.cafe h1 {
+    text-align: center;
+}
 .cafe {
     background-color: rgb(158,131,106);
-    height: 80px;
-    width: 80px;
+    height: 60px;
+    width: 60px;
     border: none;
 }
 
 .cuadroB {
     background-color: rgb(129,75,27);
-    height: 80px;
-    width: 80px;
+    height: 60px;
+    width: 60px;
     border: 1px solid black;
 }
+
 .flotar {
     float: left;
 }
