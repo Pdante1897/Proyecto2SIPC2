@@ -14,15 +14,12 @@ namespace Proyecto2SIPC2
     {
 
         static List<Button> botones;
-        static List<Ficha> fichas;
-        static Ficha ultima;
+        static List<Ficha> fichas=new List<Ficha>();
+        static Ficha ultima = new Ficha();
         static Boolean turno=true;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ultima = new Ficha();
-                        fichas = new List<Ficha>();
-
             botones = new List<Button>();
             agregarBotones();
         }
@@ -211,6 +208,8 @@ namespace Proyecto2SIPC2
 
         public void Ingresar(string coordenada) 
         {
+            
+
             Ficha ficha = new Ficha();
             if (turno)
             {
@@ -223,7 +222,6 @@ namespace Proyecto2SIPC2
             char[] posicion = coordenada.ToCharArray();
             ficha.columna = posicion[0].ToString();
             ficha.fila = posicion[1].ToString();
-
             fichas.Add(ficha);
             ImprimirFicha(ficha);
             if (turno)
@@ -262,6 +260,45 @@ namespace Proyecto2SIPC2
         protected void Button3_Click1(object sender, EventArgs e)
         {
             Ingresar(TextBox1.Text);
+        }
+
+
+        public void Guardar() 
+        {
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+            xmlWriterSettings.Indent = true;
+            xmlWriterSettings.NewLineOnAttributes = true;
+            xmlWriterSettings.OmitXmlDeclaration = true;
+            XmlWriter xmlWriter = XmlWriter.Create(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"archivo2.xml"), xmlWriterSettings);
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("tablero");
+            foreach (Ficha ficha in fichas)
+            {
+                xmlWriter.WriteStartElement("ficha");
+                xmlWriter.WriteStartElement("color");
+                xmlWriter.WriteString(ficha.color);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("columna");
+                xmlWriter.WriteString(ficha.columna);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("fila");
+                xmlWriter.WriteString(ficha.fila);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
+                
+            }
+            xmlWriter.WriteStartElement("siguienteTiro");
+            xmlWriter.WriteString(ultima.color);
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteEndDocument();
+
+            xmlWriter.Close();
+
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            Guardar();
         }
     }
 }

@@ -14,7 +14,7 @@
          <asp:Button Style="position: absolute; top: 139px; left: 116px; height: 28px; width: 68px;" ID="Button1" runat="server" Text="Cargar" OnClick="Button1_Click"/>    
 
          <asp:Label ID="Label2" runat="server" Style = "position: absolute; top: 212px; left: 102px;" Text="Cargar Partida" ForeColor="White"></asp:Label>
-         <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Cargar" OnClick="Button1_Click"/>    
+         <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Cargar" OnClick="Button2_Click"/>    
 
         </div>
         <div  style=" border: 2px solid white; position:absolute; width:296px; height: 173px; top: 65%; left: 13%;">
