@@ -7,7 +7,7 @@
          <h1 style= "text-align: center; color:white;">Partida</h1>
 
      </div>
-    <div style="border: 2px solid white; height: 700px">
+    <div style=" height: 700px">
         <div  style="border: 2px solid white; position: absolute; width: 296px; height: 315px; top: 20%; left: 13%;">
          <asp:Label ID="Label1" runat="server" Style = "position: absolute; top: 41px; left: 105px; height: 20px;" Text="Cargar Partida" ForeColor="White"></asp:Label>
          <asp:FileUpload style="position:absolute; top: 87px; left: 13px;" ID="FileUpload1" runat="server" ForeColor="White" />
