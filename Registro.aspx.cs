@@ -10,9 +10,9 @@ namespace Proyecto2SIPC2
 {
     public partial class WebForm2 : System.Web.UI.Page
     {
+        
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
 
         protected void basedeDatos()
@@ -53,5 +53,6 @@ namespace Proyecto2SIPC2
         {
             basedeDatos();
         }
+        
     }
 }

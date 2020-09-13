@@ -3,19 +3,30 @@
 
     <div style="height: 60px">
     </div>
-     <div style="height: 150px">
-         <h1 style= "text-align: center;">Partida</h1>
+     <div style=" height: 50px">
+         <h1 style= "text-align: center; color:white;">Partida</h1>
+
      </div>
-    <script>
-        function cambiarColor(boton)
-        {
-            document.boton.style.background = black;
-        }
-    </script>
-    <div style="height: 600px">
+    <div style="border: 2px solid white; height: 700px">
+        <div  style="border: 2px solid white; position: absolute; width: 296px; height: 315px; top: 20%; left: 13%;">
+         <asp:Label ID="Label1" runat="server" Style = "position: absolute; top: 41px; left: 105px; height: 20px;" Text="Cargar Partida" ForeColor="White"></asp:Label>
+         <asp:FileUpload style="position:absolute; top: 87px; left: 13px;" ID="FileUpload1" runat="server" ForeColor="White" />
+         <asp:Button Style="position: absolute; top: 139px; left: 116px; height: 28px; width: 68px;" ID="Button1" runat="server" Text="Cargar" OnClick="Button1_Click"/>    
+
+         <asp:Label ID="Label2" runat="server" Style = "position: absolute; top: 212px; left: 102px;" Text="Cargar Partida" ForeColor="White"></asp:Label>
+         <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Cargar" OnClick="Button1_Click"/>    
+
+        </div>
+        <div  style=" border: 2px solid white; position:absolute; width:296px; height: 173px; top: 65%; left: 13%;">
+         <asp:Label ID="Label3" runat="server" Style = "position: absolute; top: 17px; left: 88px; height: 20px;" Text="Ingresar coordenadas" ForeColor="White"></asp:Label>
+         <asp:Button Style="position: absolute; top: 116px; left: 115px; height: 28px; width: 68px;" ID="Button3" runat="server" Text="Colocar" OnClick="Button3_Click1"/>    
+
+            <asp:TextBox  Style="position: absolute; top: 64px; left: 63px;" ID="TextBox1" runat="server"></asp:TextBox>
+
+        </div>
     <div  style="position:absolute; width:800px; height: 400px; top: 20%; left: 33%;">
                 <link rel="stylesheet" href="../Content/EstiloTab.css">
-
+        
        <div class="flotar">
 
             <div class="cafe flotar">
