@@ -13,37 +13,326 @@ namespace Proyecto2SIPC2
     public partial class Juego : System.Web.UI.Page
     {
 
-        static List<Button> botones;
-        static List<Ficha> fichas=new List<Ficha>();
-        static Ficha ultima = new Ficha();
-        static Boolean turno=true;
-
+        private List<Button> botonesM = new List<Button>();
+        public List<Ficha> fichasM = new List<Ficha>();
+        public Ficha ultimaM = new Ficha();
+        public int[,] matrizM = new int[8, 8];
+        public Boolean partida;
         protected void Page_Load(object sender, EventArgs e)
         {
-            botones = new List<Button>();
-            agregarBotones();
+            if (!(Boolean)Session["partida"])
+            {
+                Session["partida"] = true;
+                Session["botones"] = botonesM;
+                agregarBotones();
+                Session["matriz"] = matrizM;
+                Session["fichas"] = fichasM;
+                Session["ultima"] = ultimaM;
+                Session["turno"] = false;
+                inicio();
+                try
+                {
+                    movimientosPosibles((Boolean)Session["turno"]);
+
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            else
+            {
+                agregarBotones();
+                imprimirFichas();
+                try
+                {
+                    movimientosPosibles((Boolean)Session["turno"]);
+
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+
+
+
+
+
+
+
         }
 
-        protected void Pulsar(String hola)
+        protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
-            ClientScript.RegisterClientScriptBlock(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Usuario o Contrasenia incorrectas!" + "');</script>");
-
+            
         }
-
-        protected void Button3_Click(object sender, EventArgs e)
+        public void limpiar() 
         {
+            List<Button> botones = (List<Button>)Session["botones"];
+            int[,] matriz = new int[8, 8];
+            matriz = (int[,])Session["matriz"];
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (matriz[i,j]==0)
+                    {
+                        foreach (Button item in botones)
+                        {
+                            if (item.ID.Equals(Boton(i,j)))
+                            {
+                                item.Attributes.Add("style", "border-radius: 100%; border: none; background-color:transparent;");
 
+                            }
+                        }
+                    }
+                }
+            }
         }
         public void Click(object sender, EventArgs args)
         {
-
+            Boolean turno = (Boolean)Session["turno"];
             Button button = sender as Button;
-            button.Attributes.Add("style", "border-radius: 100%; background-color: Black;");
+            validadAccion(button);
             
+                limpiar();
+                movimientosPosibles((Boolean)Session["turno"]);
+                agregarBotones();
+                imprimirFichas();
+            
+        }
+
+        public void movimientosVert(Boolean turno)
+        {
+            List<Button> botones = (List<Button>)Session["botones"];
+            int[,] matriz = new int[8, 8];
+            matriz = (int[,])Session["matriz"];
+            int color, color2;
+            if (turno)
+            {
+                color = 2;
+                color2 = 1;
+            }
+            else
+            {
+                color = 1;
+                color2 = 2;
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+
+                }
+            }
+            Session["botones"] = botones;
+
+        }
+        public void movimientosPosibles(Boolean turno) 
+        {
+            List<Button> botones = (List<Button>)Session["botones"];
+            int[,] matriz = new int[8, 8];
+            matriz = (int[,])Session["matriz"];
+            int color, colorT;
+            
+            if (turno)
+            {
+                color = 2;
+                colorT = 1;
+            }
+            else
+            {
+                color = 1;
+                colorT = 2;
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (matriz[i, j] == color)
+                    {
+                        try
+                        {
+                            for (int k = i; k < 8; k++)
+                            {
+                                if ((matriz[i - 1, j] == 0)&&(matriz[k,j]==colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i - 1, j)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+                                            
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[k, j] == 0 || matriz[k, j] == colorT))
+                                {
+                                    break;
+                                }
+                                
+                            }
+                            
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        try
+                        {
+                            for (int k = i; k >=0 ; k--)
+                            {
+                                if ((matriz[i + 1, j] == 0) && (matriz[k, j] == colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i + 1, j)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[k, j] == 0 || matriz[k, j] == colorT))
+                                {
+                                    break;
+                                }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        try
+                        {
+                            for (int k = j; k < 8; k++)
+                            {
+                                if ((matriz[i, j-1] == 0) && (matriz[i, k] == colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i, j-1)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[i, k] == 0|| matriz[i, k] == colorT))
+                                {
+                                    break;
+                                }
+                            }
+
+                        }
+                        
+                        catch (Exception)
+                        {
+
+                        }
+                        try
+                        {
+                            for (int k = j; k >= 0; k--)
+                            {
+                                if ((matriz[i, j+1] == 0) && (matriz[i, k] == colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i, j+1)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[i, k] == 0 || matriz[i, k] == colorT))
+                                {
+                                    break;
+                                }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                }
+            }
+            Session["botones"] = botones;
+
+        }
+        public void validadAccion(Button button) 
+        {
+            int[,] matriz = new int[8, 8];
+            matriz = (int[,])Session["matriz"];
+            int[] posicion= coordenada(button.ID);
+            if (matriz[posicion[0],posicion[1]]==2|| matriz[posicion[0], posicion[1]] == 1)
+            {
+
+            }
+            else
+            {
+                accion(button);
+            }
+        }
+        public void accion(Button button) 
+        {
+            Ficha ultima = (Ficha)Session["ultima"];
+            Boolean turno = (Boolean)Session["turno"];
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            int[,] matriz = new int[8, 8];
+            matriz = (int[,])Session["matriz"];
+            Ficha ficha = new Ficha();
+            int[] posicionM = coordenada(button.ID);
+            if (turno)
+            {
+                ficha.color = "blanco";
+                matriz[posicionM[0], posicionM[1]] = 1;
+
+            }
+            else
+            {
+                ficha.color = "negro";
+                matriz[posicionM[0], posicionM[1]] = 2;
+
+            }
+            char[] posicion = button.ID.ToCharArray();
+            ficha.columna = posicion[0].ToString();
+            ficha.fila = posicion[1].ToString();
+            fichas.Add(ficha);
+            ImprimirFicha(ficha);
+            if (turno)
+            {
+                ultima.color = "negra";
+                turno = false;
+            }
+            else
+            {
+                turno = true;
+                ultima.color = "blanca";
+            }
+
+            Session["matriz"] = matriz;
+            Session["fichas"] = fichas;
+            Session["ultima"] = ultima;
+            Session["turno"] = turno;
 
         }
         protected void agregarBotones()
         {
+
+            List<Button> botones = (List<Button>)Session["botones"];
             botones.Add(A1);
             botones.Add(A2);
             botones.Add(A3);
@@ -108,12 +397,10 @@ namespace Proyecto2SIPC2
             botones.Add(H6);
             botones.Add(H7);
             botones.Add(H8);
-        }
-
-        protected void Cargar()
-        {
+            Session["botones"] = botones;
 
         }
+
 
         protected void Button1_Click(object sender, EventArgs e)
         {
@@ -142,6 +429,8 @@ namespace Proyecto2SIPC2
         }
         public void CargarPartida()
         {
+            Ficha ultima = (Ficha)Session["ultima"];
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
             XmlDocument archivo = new XmlDocument();
             archivo.Load(Server.MapPath("~/Xml/partida.xml"));
             int numero = 0;
@@ -173,21 +462,26 @@ namespace Proyecto2SIPC2
                 {
                     ultima = fi;
                 }
-                else 
+                else
                 {
                     fichas.Add(fi);
                 }
-                
+
             }
+            Session["fichas"] = fichas;
+            Session["ultima"] = ultima;
             imprimirFichas();
         }
-        public void imprimirFichas() 
+        public void imprimirFichas()
         {
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            List<Button> botones = (List<Button>)Session["botones"];
+
             foreach (Button item in botones)
             {
-                foreach(Ficha fi in fichas)
+                foreach (Ficha fi in fichas)
                 {
-                    if (item.ID.Equals(fi.columna+fi.fila))
+                    if (item.ID.Equals(fi.columna + fi.fila))
                     {
                         if (fi.color.Equals("blanco"))
                         {
@@ -203,23 +497,32 @@ namespace Proyecto2SIPC2
                     }
                 }
             }
-            
+            Session["botones"] = botones;
+
+
         }
 
-        public void Ingresar(string coordenada) 
+        public void Ingresar(string coor)
         {
-            
-
+            Boolean turno = (Boolean)Session["turno"];
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            int[,] matriz = new int[8, 8];
+            matriz = (int[,])Session["matriz"]; Ficha ultima = (Ficha)Session["ultima"];
+            int[] posicionM = coordenada(coor);
             Ficha ficha = new Ficha();
             if (turno)
             {
                 ficha.color = "blanco";
+                matriz[posicionM[0], posicionM[1]] = 1;
+
             }
             else
             {
                 ficha.color = "negro";
+                matriz[posicionM[0], posicionM[1]] = 2;
+
             }
-            char[] posicion = coordenada.ToCharArray();
+            char[] posicion = coor.ToCharArray();
             ficha.columna = posicion[0].ToString();
             ficha.fila = posicion[1].ToString();
             fichas.Add(ficha);
@@ -234,11 +537,16 @@ namespace Proyecto2SIPC2
                 turno = true;
                 ultima.color = "blanca";
             }
-            
+            Session["fichas"] = fichas;
+            Session["ultima"] = ultima;
+            Session["turno"] = turno;
+            Session["matriz"] = matriz;
         }
 
         public void ImprimirFicha(Ficha ficha)
         {
+            List<Button> botones = (List<Button>)Session["botones"];
+
             foreach (Button item in botones)
             {
                 if (item.ID.Equals(ficha.columna + ficha.fila))
@@ -255,6 +563,8 @@ namespace Proyecto2SIPC2
                     }
                 }
             }
+            Session["botones"] = botones;
+
         }
 
         protected void Button3_Click1(object sender, EventArgs e)
@@ -263,8 +573,12 @@ namespace Proyecto2SIPC2
         }
 
 
-        public void Guardar() 
+        public void Guardar()
         {
+            Ficha ultima = (Ficha)Session["ultima"];
+
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+
             XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
             xmlWriterSettings.Indent = true;
             xmlWriterSettings.NewLineOnAttributes = true;
@@ -285,7 +599,7 @@ namespace Proyecto2SIPC2
                 xmlWriter.WriteString(ficha.fila);
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteEndElement();
-                
+
             }
             xmlWriter.WriteStartElement("siguienteTiro");
             xmlWriter.WriteString(ultima.color);
@@ -300,5 +614,126 @@ namespace Proyecto2SIPC2
         {
             Guardar();
         }
+
+        public void inicio()
+        {
+            int[,] matriz = new int[8, 8];
+            Random numR = new Random();
+            
+            if (numR.Next(2)==1)
+            {
+                matriz[3, 3] = 1;
+                matriz[3, 4] = 2;
+                matriz[4, 4] = 1;
+                matriz[4, 3] = 2;
+                Ingresar("E4");
+                Ingresar("E5");
+                Ingresar("D5");
+                Ingresar("D4");
+
+            }
+            else
+            {
+                
+                matriz[3, 3] = 2;
+                matriz[3, 4] = 1;
+                matriz[4, 4] = 2;
+                matriz[4, 3] = 1;
+                Ingresar("E5");
+                Ingresar("E4");
+                Ingresar("D4");
+                Ingresar("D5");
+            }
+
+            Session["matriz"] = matriz;
+
+        }
+
+        public int[] coordenada(string id) 
+        {
+            int[] coordenada= new int[2];
+            char[] posicion = id.ToCharArray();
+            switch (id[0])
+            {
+                case 'A':
+                    coordenada[0] = 0;
+                    coordenada[1] = int.Parse(posicion[1].ToString())-1;
+                    break;
+                case 'B':
+                    coordenada[0] = 1;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    break;
+                case 'C':
+                    coordenada[0] = 2;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    break;
+                case 'D':
+                    coordenada[0] = 3;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    break;
+                case 'E':
+                    coordenada[0] = 4;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    break;
+                case 'F':
+                    coordenada[0] = 5;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    break;
+                case 'G':
+                    coordenada[0] = 6;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    break;
+                case 'H':
+                    coordenada[0] = 7;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    break;
+                default:
+                    break;
+            }
+            return coordenada;
+        }
+        public string Boton(int i, int k) 
+        {
+            int j = k + 1;
+            string boton = null ;
+            switch (i)
+            {
+                case 0:
+                    boton = "A" + j;
+                    break;
+                case 1:
+                    boton = "B" + j;
+
+                    break;
+                case 2:
+                    boton = "C" + j;
+
+                    break;
+                case 3:
+                    boton = "D" + j;
+
+                    break;
+                case 4:
+                    boton = "E" + j;
+
+                    break;
+                case 5:
+                    boton = "F" + j;
+
+                    break;
+                case 6:
+                    boton = "G" + j;
+
+                    break;
+                case 7:
+                    boton = "H" + j;
+
+                    break;
+                default:
+                    break;
+            }
+            return boton;
+        }
+
     }
 }

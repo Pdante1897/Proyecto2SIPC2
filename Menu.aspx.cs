@@ -12,7 +12,8 @@ namespace Proyecto2SIPC2
         protected void Page_Load(object sender, EventArgs e)
         {
             Button1.BackColor = System.Drawing.Color.Blue;
-            
+            Session["partida"] = false;
+            Session["menu"] = true;
         }
     }
 }

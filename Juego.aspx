@@ -3,6 +3,8 @@
 
     <div style="height: 60px">
     </div>
+     <asp:UpdatePanel ID="UpdatePanel1" runat="server" OnLoad="UpdatePanel1_Load">
+         <ContentTemplate>
      <div style=" height: 50px">
          <h1 style= "text-align: center; color:white;">Partida</h1>
 
@@ -13,8 +15,8 @@
          <asp:FileUpload style="position:absolute; top: 87px; left: 13px;" ID="FileUpload1" runat="server" ForeColor="White" />
          <asp:Button Style="position: absolute; top: 139px; left: 116px; height: 28px; width: 68px;" ID="Button1" runat="server" Text="Cargar" OnClick="Button1_Click"/>    
 
-         <asp:Label ID="Label2" runat="server" Style = "position: absolute; top: 212px; left: 102px;" Text="Cargar Partida" ForeColor="White"></asp:Label>
-         <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Cargar" OnClick="Button2_Click"/>    
+         <asp:Label ID="Label2" runat="server" Style = "position: absolute; top: 212px; left: 102px;" Text="Guardar Partida" ForeColor="White"></asp:Label>
+         <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Guardar" OnClick="Button2_Click"/>    
 
         </div>
         <div  style=" border: 2px solid white; position:absolute; width:296px; height: 173px; top: 65%; left: 13%;">
@@ -60,6 +62,7 @@
 
             </div>
        </div>
+
        <div class="flotar">
            <div class="cafe flotar">
                <h1>1</h1>
@@ -352,4 +355,6 @@
        </div>
     </div>
     </div>
+             </ContentTemplate>
+          </asp:UpdatePanel>
 </asp:Content>

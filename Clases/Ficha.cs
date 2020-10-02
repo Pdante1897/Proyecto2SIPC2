@@ -19,6 +19,7 @@ namespace Proyecto2SIPC2.Clases
             this.color = color;
             this.columna = columna;
             this.fila = fila;
+            
         }
     }
 }
