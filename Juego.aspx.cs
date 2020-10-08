@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
@@ -65,9 +63,9 @@ namespace Proyecto2SIPC2
 
         protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
-            
+
         }
-        public void limpiar() 
+        public void limpiar()
         {
             List<Button> botones = (List<Button>)Session["botones"];
             int[,] matriz = new int[8, 8];
@@ -76,66 +74,225 @@ namespace Proyecto2SIPC2
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (matriz[i,j]==0)
+                    if (matriz[i, j] == 3)
                     {
                         foreach (Button item in botones)
                         {
-                            if (item.ID.Equals(Boton(i,j)))
+                            if (item.ID.Equals(Boton(i, j)))
                             {
                                 item.Attributes.Add("style", "border-radius: 100%; border: none; background-color:transparent;");
-
+                                matriz[i, j] = 0;
                             }
                         }
                     }
                 }
             }
+            Session["matriz"] = matriz;
+
         }
         public void Click(object sender, EventArgs args)
         {
+            int[,] matriz = (int[,])Session["matriz"];
             Boolean turno = (Boolean)Session["turno"];
             Button button = sender as Button;
             validadAccion(button);
-            
-                limpiar();
-                movimientosPosibles((Boolean)Session["turno"]);
-                agregarBotones();
-                imprimirFichas();
-            
-        }
 
-        public void movimientosVert(Boolean turno)
+            limpiar();
+            movimientosPosibles((Boolean)Session["turno"]);
+            agregarBotones();
+            imprimirFichas();
+            
+
+
+        }
+        public void imprimirMatriz(int[,] matriz) 
         {
-            List<Button> botones = (List<Button>)Session["botones"];
-            int[,] matriz = new int[8, 8];
-            matriz = (int[,])Session["matriz"];
-            int color, color2;
-            if (turno)
-            {
-                color = 2;
-                color2 = 1;
-            }
-            else
-            {
-                color = 1;
-                color2 = 2;
-            }
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
+                    System.Diagnostics.Debug.Write(+matriz[j, i] + " ");
 
                 }
+                System.Diagnostics.Debug.WriteLine(" ");
+
             }
-            Session["botones"] = botones;
+            System.Diagnostics.Debug.WriteLine(" ");
+        }
+        public int[,] imprimirMov(int turno, int[,] matriz) 
+        {
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (matriz[i, j] == 4) 
+                    {
+                        string bot = Boton(i, j);
+                        foreach (Ficha item in fichas)
+                        {
+                            if (item.columna+item.fila==bot)
+                            {
+                                if (turno == 1)
+                                {
+                                    item.color = "blanco";
+                                }
+                                else if (turno == 2) 
+                                {
+                                    item.color = "negro";
+                                }
+                            }
+                        }
+                        matriz[i, j] = turno;
+                    }
+
+                }
+
+            }
+            Session["fichas"] = fichas;
+            imprimirFichas();
+            return matriz;
 
         }
-        public void movimientosPosibles(Boolean turno) 
+        public void Movimiento(Ficha ficha, Boolean turno)
+        {
+            List<Ficha> movimientosHP = new List<Ficha>();
+            List<Ficha> movimientosHN = new List<Ficha>();
+            List<Ficha> movimientosVP = new List<Ficha>();
+            List<Ficha> movimientosVN = new List<Ficha>();
+
+            int[,] matriz = new int[8, 8];
+            matriz = (int[,])Session["matriz"];
+            int color, colorT, movHP = 0, movHN=0, movVN=0, movVP=0;
+            int[] posicionM = coordenada(ficha.columna + ficha.fila);
+            int fil = posicionM[1];
+            int colum = posicionM[0];
+            if (turno)
+            {
+                color = 2;
+                colorT = 1;
+            }
+            else
+            {
+                color = 1;
+                colorT = 2;
+            }
+            for (int col = posicionM[0]+1; col < 8; col++)
+            {
+                try
+                {
+                    if (matriz[col, fil] == colorT)
+                    {
+                        break;
+                    }
+                    if (matriz[col,fil]==color)
+                    {
+                        movHP++;
+                    }
+                    if (matriz[col, fil] == color && matriz[col+1, fil] == colorT)
+                    {
+                        for (int i = posicionM[0]; i < posicionM[0]+movHP; i++)
+                        {
+                            matriz[i+1, fil] = 4;
+                        }
+                        break;
+                    }                    
+                }
+                catch (Exception)
+                {
+                }                
+            }
+            for (int col = posicionM[0] - 1; col >= 0; col--)
+            {
+                try
+                {
+                    if (matriz[col, fil] == colorT)
+                    {
+                        break;
+                    }
+                    if (matriz[col, fil] == color)
+                    {
+                        movHN++;
+                    }
+                    
+                    if (matriz[col, fil] == color && matriz[col - 1, fil] == colorT)
+                    {
+                        for (int i = posicionM[0]; i >= posicionM[0] - movHN; i--)
+                        {
+                            matriz[i - 1, fil] = 4;
+                        }
+                        break;
+                    }
+
+                }
+                catch (Exception)
+                {
+                }
+            }
+            for (int fila = posicionM[1] - 1; fila >= 0; fila--)
+            {
+                try
+                {
+                    if (matriz[colum, fila] == colorT)
+                    {
+                        break;
+                    }
+                    if (matriz[colum, fila] == color)
+                    {
+                        movVN++;
+                    }
+                    if (matriz[colum, fila] == color && matriz[colum, fila-1] == colorT)
+                    {
+                        for (int i = posicionM[1]; i >= posicionM[1] - movVN; i--)
+                        {
+                            matriz[colum, i-1] = 4;
+                        }
+                        break;
+                    }
+
+                }
+                catch (Exception)
+                {
+                }
+            }
+            for (int fila = posicionM[1] + 1; fila < 8; fila++)
+            {
+                try
+                {
+                    if (matriz[colum, fila] == colorT)
+                    {
+                        break;
+                    }
+                    if (matriz[colum, fila] == color)
+                    {
+                        movVN++;
+                    }
+                    if (matriz[colum, fila] == color && matriz[colum, fila + 1] == colorT)
+                    {
+                        for (int i = posicionM[1]; i < posicionM[1] + movVN; i++)
+                        {
+                            matriz[colum, i + 1] = 4;
+                        }
+                        break;
+                    }
+
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            imprimirMatriz(matriz);
+
+            Session["matriz"] = imprimirMov(colorT, matriz);
+        }
+        public void movimientosPosibles(Boolean turno)
         {
             List<Button> botones = (List<Button>)Session["botones"];
             int[,] matriz = new int[8, 8];
             matriz = (int[,])Session["matriz"];
             int color, colorT;
-            
+
             if (turno)
             {
                 color = 2;
@@ -156,14 +313,14 @@ namespace Proyecto2SIPC2
                         {
                             for (int k = i; k < 8; k++)
                             {
-                                if ((matriz[i - 1, j] == 0)&&(matriz[k,j]==colorT))
+                                if ((matriz[i - 1, j] == 0) && (matriz[k, j] == colorT))
                                 {
                                     foreach (Button item in botones)
                                     {
                                         if (item.ID.Equals(Boton(i - 1, j)))
                                         {
                                             item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
-                                            
+                                            matriz[i - 1, j] = 3;
                                         }
                                     }
                                     break;
@@ -173,9 +330,9 @@ namespace Proyecto2SIPC2
                                 {
                                     break;
                                 }
-                                
+
                             }
-                            
+
                         }
                         catch (Exception)
                         {
@@ -183,7 +340,7 @@ namespace Proyecto2SIPC2
                         }
                         try
                         {
-                            for (int k = i; k >=0 ; k--)
+                            for (int k = i; k >= 0; k--)
                             {
                                 if ((matriz[i + 1, j] == 0) && (matriz[k, j] == colorT))
                                 {
@@ -192,7 +349,7 @@ namespace Proyecto2SIPC2
                                         if (item.ID.Equals(Boton(i + 1, j)))
                                         {
                                             item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
-
+                                            matriz[i + 1, j] = 3;
                                         }
                                     }
                                     break;
@@ -213,27 +370,27 @@ namespace Proyecto2SIPC2
                         {
                             for (int k = j; k < 8; k++)
                             {
-                                if ((matriz[i, j-1] == 0) && (matriz[i, k] == colorT))
+                                if ((matriz[i, j - 1] == 0) && (matriz[i, k] == colorT))
                                 {
                                     foreach (Button item in botones)
                                     {
-                                        if (item.ID.Equals(Boton(i, j-1)))
+                                        if (item.ID.Equals(Boton(i, j - 1)))
                                         {
                                             item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
-
+                                            matriz[i, j - 1] = 3;
                                         }
                                     }
                                     break;
 
                                 }
-                                else if ((matriz[i, k] == 0|| matriz[i, k] == colorT))
+                                else if ((matriz[i, k] == 0 || matriz[i, k] == colorT))
                                 {
                                     break;
                                 }
                             }
 
                         }
-                        
+
                         catch (Exception)
                         {
 
@@ -242,14 +399,14 @@ namespace Proyecto2SIPC2
                         {
                             for (int k = j; k >= 0; k--)
                             {
-                                if ((matriz[i, j+1] == 0) && (matriz[i, k] == colorT))
+                                if ((matriz[i, j + 1] == 0) && (matriz[i, k] == colorT))
                                 {
                                     foreach (Button item in botones)
                                     {
-                                        if (item.ID.Equals(Boton(i, j+1)))
+                                        if (item.ID.Equals(Boton(i, j + 1)))
                                         {
                                             item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
-
+                                            matriz[i, j + 1] = 3;
                                         }
                                     }
                                     break;
@@ -270,14 +427,15 @@ namespace Proyecto2SIPC2
                 }
             }
             Session["botones"] = botones;
+            Session["matriz"] = matriz;
 
         }
-        public void validadAccion(Button button) 
+        public void validadAccion(Button button)
         {
             int[,] matriz = new int[8, 8];
             matriz = (int[,])Session["matriz"];
-            int[] posicion= coordenada(button.ID);
-            if (matriz[posicion[0],posicion[1]]==2|| matriz[posicion[0], posicion[1]] == 1)
+            int[] posicion = coordenada(button.ID);
+            if (matriz[posicion[0], posicion[1]] == 2 || matriz[posicion[0], posicion[1]] == 1 || matriz[posicion[0], posicion[1]] == 0)
             {
 
             }
@@ -286,7 +444,7 @@ namespace Proyecto2SIPC2
                 accion(button);
             }
         }
-        public void accion(Button button) 
+        public void accion(Button button)
         {
             Ficha ultima = (Ficha)Session["ultima"];
             Boolean turno = (Boolean)Session["turno"];
@@ -311,7 +469,9 @@ namespace Proyecto2SIPC2
             ficha.columna = posicion[0].ToString();
             ficha.fila = posicion[1].ToString();
             fichas.Add(ficha);
+            Movimiento(ficha, turno);
             ImprimirFicha(ficha);
+
             if (turno)
             {
                 ultima.color = "negra";
@@ -323,11 +483,9 @@ namespace Proyecto2SIPC2
                 ultima.color = "blanca";
             }
 
-            Session["matriz"] = matriz;
             Session["fichas"] = fichas;
             Session["ultima"] = ultima;
             Session["turno"] = turno;
-
         }
         protected void agregarBotones()
         {
@@ -567,6 +725,7 @@ namespace Proyecto2SIPC2
 
         }
 
+
         protected void Button3_Click1(object sender, EventArgs e)
         {
             Ingresar(TextBox1.Text);
@@ -619,8 +778,8 @@ namespace Proyecto2SIPC2
         {
             int[,] matriz = new int[8, 8];
             Random numR = new Random();
-            
-            if (numR.Next(2)==1)
+
+            if (numR.Next(2) == 1)
             {
                 matriz[3, 3] = 1;
                 matriz[3, 4] = 2;
@@ -634,7 +793,7 @@ namespace Proyecto2SIPC2
             }
             else
             {
-                
+
                 matriz[3, 3] = 2;
                 matriz[3, 4] = 1;
                 matriz[4, 4] = 2;
@@ -649,15 +808,15 @@ namespace Proyecto2SIPC2
 
         }
 
-        public int[] coordenada(string id) 
+        public int[] coordenada(string id)
         {
-            int[] coordenada= new int[2];
+            int[] coordenada = new int[2];
             char[] posicion = id.ToCharArray();
             switch (id[0])
             {
                 case 'A':
                     coordenada[0] = 0;
-                    coordenada[1] = int.Parse(posicion[1].ToString())-1;
+                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
                     break;
                 case 'B':
                     coordenada[0] = 1;
@@ -692,10 +851,10 @@ namespace Proyecto2SIPC2
             }
             return coordenada;
         }
-        public string Boton(int i, int k) 
+        public string Boton(int i, int k)
         {
             int j = k + 1;
-            string boton = null ;
+            string boton = null;
             switch (i)
             {
                 case 0:

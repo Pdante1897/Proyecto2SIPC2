@@ -53,6 +53,8 @@ C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\roslyn\VBCSCompile
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Antlr3.Runtime.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\AspNet.ScriptManager.bootstrap.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\AspNet.ScriptManager.jQuery.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.SqlServer.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Microsoft.AspNet.FriendlyUrls.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Microsoft.AspNet.Web.Optimization.WebForms.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
@@ -62,6 +64,8 @@ C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Microsoft.Web.Infr
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Newtonsoft.Json.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Optimization.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\WebGrease.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.xml
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.SqlServer.xml
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Optimization.xml
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Newtonsoft.Json.xml
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Antlr3.Runtime.pdb
@@ -69,11 +73,7 @@ C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Microsoft.AspNet.F
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\es\System.Web.Optimization.resources.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\es\Microsoft.AspNet.FriendlyUrls.resources.dll
-C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.csprojAssemblyReference.cache
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.csproj.CopyComplete
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.pdb
-C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.dll
-C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.SqlServer.dll
-C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.xml
-C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\EntityFramework.SqlServer.xml
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.csprojAssemblyReference.cache
