@@ -53,9 +53,7 @@ namespace Proyecto2SIPC2
                 }
             }
 
-
-
-
+            
 
 
 
@@ -191,6 +189,7 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[col, fil] == color && matriz[col+1, fil] == colorT)
                     {
+
                         for (int i = posicionM[0]; i < posicionM[0]+movHP; i++)
                         {
                             matriz[i+1, fil] = 4;
@@ -321,7 +320,7 @@ namespace Proyecto2SIPC2
                                         {
                                             item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
                                             matriz[i - 1, j] = 3;
-                                        }
+                                        } 
                                     }
                                     break;
 
@@ -423,6 +422,129 @@ namespace Proyecto2SIPC2
                         {
 
                         }
+                        try
+                        {
+                            int col = j;
+                            for (int k = i; k < 8; k++)
+                            {
+                                if ((matriz[i - 1, j-1] == 0) && (matriz[k, col] == colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i - 1, j-1)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+                                            matriz[i - 1, j-1] = 3;
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                {
+                                    break;
+                                }
+                                col++;
+
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        try
+                        {
+                            int col = j;
+                            for (int k = i; k < 8; k++)
+                            {
+                                if ((matriz[i - 1, j + 1] == 0) && (matriz[k, col] == colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i - 1, j + 1)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+                                            matriz[i - 1, j + 1] = 3;
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                {
+                                    break;
+                                }
+                                col--;
+
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        try
+                        {
+                            int col = j;
+                            for (int k = i; k >= 0; k--)
+                            {
+                                if ((matriz[i + 1, j-1] == 0) && (matriz[k, col] == colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i + 1, j-1)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+                                            matriz[i + 1, j-1] = 3;
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                {
+                                    break;
+                                }
+                                col++;
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        try
+                        {
+                            int col = j;
+                            for (int k = i; k >= 0; k--)
+                            {
+                                if ((matriz[i + 1, j + 1] == 0) && (matriz[k, col] == colorT))
+                                {
+                                    foreach (Button item in botones)
+                                    {
+                                        if (item.ID.Equals(Boton(i + 1, j + 1)))
+                                        {
+                                            item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+                                            matriz[i + 1, j + 1] = 3;
+                                        }
+                                    }
+                                    break;
+
+                                }
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                {
+                                    break;
+                                }
+                                col--;
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+
                     }
                 }
             }
