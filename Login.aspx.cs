@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Proyecto2SIPC2
 {
@@ -14,7 +10,7 @@ namespace Proyecto2SIPC2
         {
             Session.Clear();
         }
-        protected Boolean IniciarSesion(String usuario, String contrasenia) 
+        protected Boolean IniciarSesion(String usuario, String contrasenia)
         {
             String cadena;
             cadena = ("Select nomUser from usuario  where nomuser = @user AND contrasenia = @pass");
@@ -53,7 +49,7 @@ namespace Proyecto2SIPC2
             {
                 Response.Redirect("Menu.aspx");
             }
-            else 
+            else
             {
                 TextBox2.Text = null;
                 ClientScript.RegisterClientScriptBlock(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Usuario o Contrasenia incorrectas!" + "');</script>");
