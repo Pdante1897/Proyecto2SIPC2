@@ -72,7 +72,7 @@ namespace Proyecto2SIPC2
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (matriz[i, j] == 3)
+                    if (matriz[i, j] == 3|| matriz[i, j] == 0)
                     {
                         foreach (Button item in botones)
                         {
@@ -154,14 +154,11 @@ namespace Proyecto2SIPC2
         }
         public void Movimiento(Ficha ficha, Boolean turno)
         {
-            List<Ficha> movimientosHP = new List<Ficha>();
-            List<Ficha> movimientosHN = new List<Ficha>();
-            List<Ficha> movimientosVP = new List<Ficha>();
-            List<Ficha> movimientosVN = new List<Ficha>();
+            
 
             int[,] matriz = new int[8, 8];
             matriz = (int[,])Session["matriz"];
-            int color, colorT, movHP = 0, movHN=0, movVN=0, movVP=0;
+            int color, colorT, movHP = 0, movHN=0, movVN=0, movVP=0, movDiP=0, movDiN=0, movDP = 0, movDN = 0;
             int[] posicionM = coordenada(ficha.columna + ficha.fila);
             int fil = posicionM[1];
             int colum = posicionM[0];
@@ -179,7 +176,7 @@ namespace Proyecto2SIPC2
             {
                 try
                 {
-                    if (matriz[col, fil] == colorT)
+                    if (matriz[col, fil] != color)
                     {
                         break;
                     }
@@ -189,12 +186,15 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[col, fil] == color && matriz[col+1, fil] == colorT)
                     {
-
-                        for (int i = posicionM[0]; i < posicionM[0]+movHP; i++)
+                        if (posicionM[0] + movHP<8)
                         {
-                            matriz[i+1, fil] = 4;
+                            for (int i = posicionM[0]; i < posicionM[0] + movHP; i++)
+                            {
+                                matriz[i + 1, fil] = 4;
+                            }
+                            break;
                         }
-                        break;
+                        
                     }                    
                 }
                 catch (Exception)
@@ -205,7 +205,7 @@ namespace Proyecto2SIPC2
             {
                 try
                 {
-                    if (matriz[col, fil] == colorT)
+                    if (matriz[col, fil] != color)
                     {
                         break;
                     }
@@ -216,11 +216,15 @@ namespace Proyecto2SIPC2
                     
                     if (matriz[col, fil] == color && matriz[col - 1, fil] == colorT)
                     {
-                        for (int i = posicionM[0]; i >= posicionM[0] - movHN; i--)
+                        if (posicionM[0] - movHN>=0)
                         {
-                            matriz[i - 1, fil] = 4;
+                            for (int i = posicionM[0]; i >= posicionM[0] - movHN; i--)
+                            {
+                                matriz[i - 1, fil] = 4;
+                            }
+                            break;
                         }
-                        break;
+                        
                     }
 
                 }
@@ -232,21 +236,25 @@ namespace Proyecto2SIPC2
             {
                 try
                 {
-                    if (matriz[colum, fila] == colorT)
+                    if (matriz[colum, fila] != color)
                     {
                         break;
                     }
                     if (matriz[colum, fila] == color)
                     {
-                        movVN++;
+                        movVP++;
                     }
                     if (matriz[colum, fila] == color && matriz[colum, fila-1] == colorT)
                     {
-                        for (int i = posicionM[1]; i >= posicionM[1] - movVN; i--)
+                        if (posicionM[1] - movVP>=0)
                         {
-                            matriz[colum, i-1] = 4;
+                            for (int i = posicionM[1]; i >= posicionM[1] - movVP; i--)
+                            {
+                                matriz[colum, i - 1] = 4;
+                            }
+                            break;
                         }
-                        break;
+                        
                     }
 
                 }
@@ -258,7 +266,7 @@ namespace Proyecto2SIPC2
             {
                 try
                 {
-                    if (matriz[colum, fila] == colorT)
+                    if (matriz[colum, fila] != color)
                     {
                         break;
                     }
@@ -268,11 +276,15 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[colum, fila] == color && matriz[colum, fila + 1] == colorT)
                     {
-                        for (int i = posicionM[1]; i < posicionM[1] + movVN; i++)
+                        if (posicionM[1] + movVN<8)
                         {
-                            matriz[colum, i + 1] = 4;
+                            for (int i = posicionM[1]; i < posicionM[1] + movVN; i++)
+                            {
+                                matriz[colum, i + 1] = 4;
+                            }
+                            break;
                         }
-                        break;
+                        
                     }
 
                 }
@@ -280,9 +292,145 @@ namespace Proyecto2SIPC2
                 {
                 }
             }
+            int filaDiag = fil+1;
+            int filaIn = fil + 1;
+            for (int col = posicionM[0] + 1; col < 8; col++)
+            {
+                try
+                {
+                    if (matriz[col, filaDiag] != color)
+                    {
+                        break;
+                    }
+                    if (matriz[col, filaDiag] == color)
+                    {
+                        movDiP++;
+                    }
+                    if (matriz[col, filaDiag] == color && matriz[col + 1, filaDiag+1] == colorT)
+                    {
+                        if (posicionM[0] + movDiP < 8)
+                        {
+                            for (int i = posicionM[0]; i < posicionM[0] + movDiP; i++)
+                            {
+                                matriz[i + 1, filaIn] = 4;
+                                filaIn++;
+                            }
+                            break;
+                        }
 
+                    }
+                    filaDiag++;
+
+                }
+                catch (Exception)
+                {
+                }
+
+            }
+            filaDiag = fil - 1;
+            filaIn = fil -1;
+            for (int col = posicionM[0] + 1; col < 8; col++)
+            {
+                try
+                {
+                    if (matriz[col, filaDiag] != color)
+                    {
+                        break;
+                    }
+                    if (matriz[col, filaDiag] == color)
+                    {
+                        movDiN++;
+                    }
+                    if (matriz[col, filaDiag] == color && matriz[col + 1, filaDiag - 1] == colorT)
+                    {
+                        if (posicionM[0] + movDiN < 8)
+                        {
+                            for (int i = posicionM[0]; i < posicionM[0] + movDiN; i++)
+                            {
+                                matriz[i + 1, filaIn] = 4;
+                                filaIn--;
+                            }
+                            break;
+                        }
+
+                    }
+                    filaDiag--;
+
+                }
+                catch (Exception)
+                {
+                }
+            }
+            filaDiag = fil + 1;
+            filaIn = fil + 1;
+            for (int col = posicionM[0] - 1; col >= 0; col--)
+            {
+                try
+                {
+                    if (matriz[col, filaDiag] != color)
+                    {
+                        break;
+                    }
+                    if (matriz[col, filaDiag] == color)
+                    {
+                        movDP++;
+                    }
+                    if (matriz[col, filaDiag] == color && matriz[col - 1, filaDiag + 1] == colorT)
+                    {
+                        if (posicionM[0] - movDP < 8)
+                        {
+                            for (int i = posicionM[0]; i >= posicionM[0] - movDP; i--)
+                            {
+                                matriz[i - 1, filaIn] = 4;
+                                filaIn++;
+                            }
+                            break;
+                        }
+
+                    }
+                    filaDiag++;
+
+                }
+                catch (Exception)
+                {
+                }
+
+            }
+            filaDiag = fil - 1;
+            filaIn = fil - 1;
+            for (int col = posicionM[0] - 1; col >= 0; col--)
+            {
+                try
+                {
+                    if (matriz[col, filaDiag] != color)
+                    {
+                        break;
+                    }
+                    if (matriz[col, filaDiag] == color)
+                    {
+                        movDN++;
+                    }
+                    if (matriz[col, filaDiag] == color && matriz[col - 1, filaDiag - 1] == colorT)
+                    {
+                        if (posicionM[0] - movDN < 8)
+                        {
+                            for (int i = posicionM[0]; i >= posicionM[0] - movDN; i--)
+                            {
+                                matriz[i - 1, filaIn] = 4;
+                                filaIn--;
+                            }
+                            break;
+                        }
+
+                    }
+                    filaDiag--;
+
+                }
+                catch (Exception)
+                {
+                }
+            }
             imprimirMatriz(matriz);
-
             Session["matriz"] = imprimirMov(colorT, matriz);
         }
         public void movimientosPosibles(Boolean turno)
@@ -325,7 +473,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[k, j] == 0 || matriz[k, j] == colorT))
+                                else if ((matriz[k, j] == 0 || matriz[k, j] == colorT || matriz[k, j] == 3))
                                 {
                                     break;
                                 }
@@ -354,7 +502,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[k, j] == 0 || matriz[k, j] == colorT))
+                                else if ((matriz[k, j] == 0 || matriz[k, j] == colorT || matriz[k, j] == 3))
                                 {
                                     break;
                                 }
@@ -382,7 +530,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[i, k] == 0 || matriz[i, k] == colorT))
+                                else if ((matriz[i, k] == 0 || matriz[i, k] == colorT || matriz[i, k] == 3))
                                 {
                                     break;
                                 }
@@ -411,7 +559,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[i, k] == 0 || matriz[i, k] == colorT))
+                                else if ((matriz[i, k] == 0 || matriz[i, k] == colorT || matriz[i, k] == 3))
                                 {
                                     break;
                                 }
@@ -440,7 +588,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT || matriz[k, col] == 3))
                                 {
                                     break;
                                 }
@@ -471,7 +619,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT || matriz[k, col] == 3))
                                 {
                                     break;
                                 }
@@ -502,7 +650,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT || matriz[k, col] == 3))
                                 {
                                     break;
                                 }
@@ -532,7 +680,7 @@ namespace Proyecto2SIPC2
                                     break;
 
                                 }
-                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT))
+                                else if ((matriz[k, col] == 0 || matriz[k, col] == colorT || matriz[k, col] == 3))
                                 {
                                     break;
                                 }
@@ -684,11 +832,12 @@ namespace Proyecto2SIPC2
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            string ext = Path.GetExtension(FileUpload1.FileName);
-            Console.WriteLine(ext);
+            
+            string extension = Path.GetExtension(FileUpload1.FileName);
+            System.Diagnostics.Debug.WriteLine("hola mundo");
             if (FileUpload1.HasFile)
             {
-                if (ext.Equals(".xml"))
+                if (extension.Equals(".xml"))
                 {
                     FileUpload1.SaveAs(Server.MapPath("~/Xml/partida.xml"));
                     {
@@ -709,11 +858,12 @@ namespace Proyecto2SIPC2
         }
         public void CargarPartida()
         {
-            Ficha ultima = (Ficha)Session["ultima"];
-            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            Ficha ultima = new Ficha();
+            List<Ficha> fichas = new List<Ficha>();
             XmlDocument archivo = new XmlDocument();
             archivo.Load(Server.MapPath("~/Xml/partida.xml"));
             int numero = 0;
+            Boolean turno;
             foreach (XmlElement item in archivo.DocumentElement)
             {
                 Ficha fi = new Ficha();
@@ -732,6 +882,9 @@ namespace Proyecto2SIPC2
                         case "fila":
                             fi.fila = valor;
                             break;
+                        case "siguienteTiro":
+                            fi.color = valor;
+                            break;
                         default:
                             numero++;
                             Console.WriteLine(numero);
@@ -748,10 +901,49 @@ namespace Proyecto2SIPC2
                 }
 
             }
+           
             Session["fichas"] = fichas;
             Session["ultima"] = ultima;
+            limpiarTablero(fichas);
             imprimirFichas();
+            if (ultima.color == "negro")
+            {
+                
+                turno = false;
+                Session["turno"] = turno;
+
+            }
+            else
+            {
+                turno = true;
+                Session["turno"] = turno;
+
+            }
+            movimientosPosibles(turno);
         }
+
+        public void limpiarTablero(List<Ficha> fichas) 
+        {
+            int[,] matriz = new int[8,8];
+            foreach (Ficha item in fichas)
+            {
+                int[] coor =  coordenada(item.columna+item.fila);
+                if (item.color=="negro")
+                {
+                    matriz[coor[0], coor[1]] = 2;
+                }
+                else
+                {
+                    matriz[coor[0], coor[1]] = 1;
+                }
+            }
+            Session["matriz"] = matriz;
+            imprimirMatriz(matriz);
+            limpiar();
+
+
+        }
+        
         public void imprimirFichas()
         {
             List<Ficha> fichas = (List<Ficha>)Session["fichas"];
