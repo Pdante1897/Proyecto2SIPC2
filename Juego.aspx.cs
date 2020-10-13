@@ -18,8 +18,23 @@ namespace Proyecto2SIPC2
         public Boolean partida;
         protected void Page_Load(object sender, EventArgs e)
         {
+            Label4.Text = (string)Session["usuario"];
+            Label6.Text = (string)Session["colorficha"];
+            Label14.Text = (string)Session["colorficha2"];
+            if (!(Boolean)Session["jugador2"])
+            {
+                Label12.Text = "Maquina";
+
+
+            }
+            else
+            {
+                Label12.Text = (string)Session["j2"];
+            }
             if (!(Boolean)Session["partida"])
             {
+                Session["movimientosJ1"] = 0;
+                Session["movimientosJ2"] = 0;
                 Session["partida"] = true;
                 Session["botones"] = botonesM;
                 AgregarBotones();
@@ -27,36 +42,19 @@ namespace Proyecto2SIPC2
                 Session["fichas"] = fichasM;
                 Session["ultima"] = ultimaM;
                 Session["turno"] = false;
+
                 Inicio();
-                try
-                {
-                    MovimientosPosibles((Boolean)Session["turno"]);
-
-                }
-                catch (Exception)
-                {
-
-                }
+                MostrarTurno();
             }
             else
             {
                 AgregarBotones();
                 ImprimirFichas();
-                try
-                {
-                    MovimientosPosibles((Boolean)Session["turno"]);
 
-                }
-                catch (Exception)
-                {
-
-                }
-                ValidarGanadores();
             }
-
-
-
-
+            MovimientosPosibles((Boolean)Session["turno"]);
+            
+            ValidarGanadores();
 
         }
         public void ValidarGanadores()
@@ -65,20 +63,43 @@ namespace Proyecto2SIPC2
             int[] fichas = ContarFichas(matriz);
             int fichasN = fichas[0];
             int fichasB = fichas[1];
+            Label10.Text = "" + (int)Session["movimientosJ1"];
+            Label18.Text = "" + (int)Session["movimientosJ2"];
+            if ((string)Session["colorficha"]=="Negro")
+            {
+                Label8.Text = ""+fichasN;
+                Label16.Text = "" + fichasB;
+                
+            }
+            else
+            {
+                Label8.Text = "" + fichasB;
+                Label16.Text = "" + fichasN;
+            }
             Boolean movOtroJ = MovimientosPosibles(!(Boolean)Session["turno"]);
             Limpiar();
 
             Boolean movTurnoAct = MovimientosPosibles((Boolean)Session["turno"]);
-            if (!movTurnoAct && !movOtroJ)
+            if (fichasB + fichasN == 64 || !movTurnoAct && !movOtroJ)
             {
                 if (fichasN > fichasB)
                 {
-                    Page.ClientScript.RegisterStartupScript(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Negras Ganan!" + "');</script>");
+                    string script = "alert('Ganan las Negras!');";
 
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
                 }
                 else if (fichasB > fichasN)
                 {
-                    Page.ClientScript.RegisterStartupScript(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Blancas Ganan!" + "');</script>");
+                    string script = "alert('Ganan las Blancas!');";
+
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+
+                }
+                else if (fichasB == fichasN)
+                {
+                    string script = "alert('Empate!');";
+
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
 
                 }
             }
@@ -89,12 +110,63 @@ namespace Proyecto2SIPC2
             else if (!movTurnoAct)
             {
                 Session["turno"] = !(Boolean)Session["turno"];
-                Page.ClientScript.RegisterStartupScript(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "No se puede" + "');</script>");
+                string script = "alert('No puedes mover! :c');";
+                ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+                MovimientosPosibles((Boolean)Session["turno"]);
             }
 
         }
         protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
+            MovimientosPosibles((Boolean)Session["turno"]);
+            
+        }
+        public void MostrarTurno() 
+        {
+            
+            if ((!(Boolean)Session["turno"]) && (string)Session["colorficha"] == "Negro")
+            {
+                Label19.Text = "Turno: Jugador 1";
+            }
+            else if (((Boolean)Session["turno"]) && (string)Session["colorficha"] == "Blanco")
+            {
+                Label19.Text = "Turno: Jugador 1";
+
+            }
+            else if ((!(Boolean)Session["turno"]) && (string)Session["colorficha2"] == "Negro")
+            {
+                Label19.Text = "Turno: Jugador 2";
+
+            }
+            else if (((Boolean)Session["turno"]) && (string)Session["colorficha2"] == "Blanco")
+            {
+                Label19.Text = "Turno: Jugador 2";
+
+            }
+            
+        }
+        public void SumTurno()
+        {
+
+            if ((!(Boolean)Session["turno"]) && (string)Session["colorficha"] == "Negro")
+            {
+                Session["movimientosJ2"] = (int)Session["movimientosJ2"] + 1;
+            }
+            else if (((Boolean)Session["turno"]) && (string)Session["colorficha"] == "Blanco")
+            {
+                Session["movimientosJ2"] = (int)Session["movimientosJ2"] + 1;
+
+            }
+            else if ((!(Boolean)Session["turno"]) && (string)Session["colorficha2"] == "Negro")
+            {
+                Session["movimientosJ1"] = (int)Session["movimientosJ1"] + 1;
+
+            }
+            else if (((Boolean)Session["turno"]) && (string)Session["colorficha2"] == "Blanco")
+            {
+                Session["movimientosJ1"] = (int)Session["movimientosJ1"] + 1;
+
+            }
 
         }
         public void Limpiar()
@@ -131,9 +203,10 @@ namespace Proyecto2SIPC2
             Limpiar();
             MovimientosPosibles((Boolean)Session["turno"]);
             ImprimirFichas();
-
+            ImprimirMatriz((int[,])Session["matriz"]);
+            SumTurno();
+            MostrarTurno();
             ValidarGanadores();
-
 
         }
         public void ImprimirMatriz(int[,] matriz)
@@ -185,11 +258,9 @@ namespace Proyecto2SIPC2
             return matriz;
 
         }
-        public void Movimiento(Ficha ficha, Boolean turno)
+        public void Movimiento(Ficha ficha, Boolean turno, int[,] matriz)
         {
 
-
-            int[,] matriz = (int[,])Session["matriz"];
             int color, colorT, movHP = 0, movHN = 0, movVN = 0, movVP = 0, movDiP = 0, movDiN = 0, movDP = 0, movDN = 0;
             int[] posicionM = Coordenada(ficha.columna + ficha.fila);
             int fil = posicionM[1];
@@ -549,7 +620,6 @@ namespace Proyecto2SIPC2
 
                 }
             }
-            ImprimirMatriz(matriz);
             Session["matriz"] = ImprimirMov(colorT, matriz);
         }
         public Boolean MovimientosPosibles(Boolean turno)
@@ -909,23 +979,21 @@ namespace Proyecto2SIPC2
             ficha.columna = posicion[0].ToString();
             ficha.fila = posicion[1].ToString();
             fichas.Add(ficha);
-            Movimiento(ficha, turno);
+            Movimiento(ficha, (Boolean)Session["turno"], matriz);
             ImprimirFicha(ficha);
 
-            if (turno)
+            if (!turno)
             {
                 ultima.color = "negra";
-                turno = false;
             }
             else
             {
-                turno = true;
                 ultima.color = "blanca";
             }
 
             Session["fichas"] = fichas;
             Session["ultima"] = ultima;
-            Session["turno"] = turno;
+            Session["turno"] = !(Boolean)Session["turno"];
         }
         protected void AgregarBotones()
         {
@@ -1090,6 +1158,10 @@ namespace Proyecto2SIPC2
 
             }
             MovimientosPosibles(turno);
+            ValidarGanadores();
+            MostrarTurno();
+            
+
         }
 
         public void LimpiarTablero(List<Ficha> fichas)
@@ -1210,10 +1282,7 @@ namespace Proyecto2SIPC2
         }
 
 
-        protected void Button3_Click1(object sender, EventArgs e)
-        {
-            Ingresar(TextBox1.Text);
-        }
+        
 
 
         public void Guardar()

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="othelloModelStoreContainer" CdmEntityContainer="othelloEntities1">
+    <EntitySetMapping Name="participante">
+      <EntityTypeMapping TypeName="othelloModel.participante">
+        <MappingFragment StoreEntitySet="participante">
+          <ScalarProperty Name="codigoPart" ColumnName="codigoPart" />
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+          <ScalarProperty Name="movimientos" ColumnName="movimientos" />
+          <ScalarProperty Name="resultado" ColumnName="resultado" />
+          <ScalarProperty Name="codigoPartida" ColumnName="codigoPartida" />
+          <ScalarProperty Name="nomUser" ColumnName="nomUser" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="participanteTorneo">
+      <EntityTypeMapping TypeName="othelloModel.participanteTorneo">
+        <MappingFragment StoreEntitySet="participanteTorneo">
+          <ScalarProperty Name="codigoPart" ColumnName="codigoPart" />
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+          <ScalarProperty Name="movimientos" ColumnName="movimientos" />
+          <ScalarProperty Name="resultado" ColumnName="resultado" />
+          <ScalarProperty Name="rondas" ColumnName="rondas" />
+          <ScalarProperty Name="codigoTorneo" ColumnName="codigoTorneo" />
+          <ScalarProperty Name="usuario" ColumnName="usuario" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="partida">
+      <EntityTypeMapping TypeName="othelloModel.partida">
+        <MappingFragment StoreEntitySet="partida">
+          <ScalarProperty Name="codigoPartida" ColumnName="codigoPartida" />
+          <ScalarProperty Name="tipo" ColumnName="tipo" />
+          <ScalarProperty Name="estado" ColumnName="estado" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="torneo">
+      <EntityTypeMapping TypeName="othelloModel.torneo">
+        <MappingFragment StoreEntitySet="torneo">
+          <ScalarProperty Name="codigoTorneo" ColumnName="codigoTorneo" />
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+          <ScalarProperty Name="estado" ColumnName="estado" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="usuario">
+      <EntityTypeMapping TypeName="othelloModel.usuario">
+        <MappingFragment StoreEntitySet="usuario">
+          <ScalarProperty Name="nomUser" ColumnName="nomUser" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="apellido" ColumnName="apellido" />
+          <ScalarProperty Name="contrasenia" ColumnName="contrasenia" />
+          <ScalarProperty Name="fechaN" ColumnName="fechaN" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="pais" ColumnName="pais" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

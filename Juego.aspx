@@ -20,15 +20,35 @@
          <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Guardar" OnClick="Button2_Click"/>    
 
         </div>
-        <div  style=" border: 2px solid white; position:absolute; width:296px; height: 173px; top: 65%; left: 13%;">
-         <asp:Label ID="Label3" runat="server" Style = "position: absolute; top: 17px; left: 88px; height: 20px;" Text="Ingresar coordenadas" ForeColor="White"></asp:Label>
-         <asp:Button Style="position: absolute; top: 116px; left: 115px; height: 28px; width: 68px;" ID="Button3" runat="server" Text="Colocar" OnClick="Button3_Click1"/>    
-
-            <asp:TextBox  Style="position: absolute; top: 64px; left: 63px;" ID="TextBox1" runat="server"></asp:TextBox>
-
-        </div>
+        
         <asp:UpdatePanel ID="UpdatePanel1" runat="server" OnLoad="UpdatePanel1_Load">
          <ContentTemplate>
+            <asp:Label ID="Label19" runat="server" Style = "position: absolute;  left: 45%" Text="Truno:" ForeColor="White" Font-Size="Large"></asp:Label>
+            <div  style=" border: 2px solid white; position:absolute; width:296px; height: 173px; top: 20%; left: 73%;">
+            <asp:Label ID="Label3" runat="server" Style = "position: absolute; top: 20px; left: 30px; height: 20px;" Text="Jugador 1: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label4" runat="server" Style = "position: absolute; top: 20px; left: 120px; height: 20px;" Text="Jugador 1 " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label5" runat="server" Style = "position: absolute; top: 50px; left: 30px; height: 20px;" Text="Color: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label6" runat="server" Style = "position: absolute; top: 50px; left: 120px; height: 20px;" Text="Color de fichas " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label7" runat="server" Style = "position: absolute; top: 80px; left: 30px; height: 20px;" Text="Fichas: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label8" runat="server" Style = "position: absolute; top: 80px; left: 120px; height: 20px;" Text="numero de fichas " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label9" runat="server" Style = "position: absolute; top: 110px; left: 30px; height: 20px;" Text="Movimientos: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label10" runat="server" Style = "position: absolute; top: 110px; left: 120px; height: 20px;" Text="numero de Turnos " ForeColor="White"></asp:Label>
+
+
+        </div>
+        <div  style=" border: 2px solid white; position:absolute; width:296px; height: 173px; top: 45%; left: 73%;">
+            <asp:Label ID="Label11" runat="server" Style = "position: absolute; top: 20px; left: 30px; height: 20px;" Text="Jugador 2: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label12" runat="server" Style = "position: absolute; top: 20px; left: 120px; height: 20px;" Text="Jugador 1 " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label13" runat="server" Style = "position: absolute; top: 50px; left: 30px; height: 20px;" Text="Color: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label14" runat="server" Style = "position: absolute; top: 50px; left: 120px; height: 20px;" Text="Color de fichas " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label15" runat="server" Style = "position: absolute; top: 80px; left: 30px; height: 20px;" Text="Fichas: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label16" runat="server" Style = "position: absolute; top: 80px; left: 120px; height: 20px;" Text="numero de fichas " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label17" runat="server" Style = "position: absolute; top: 110px; left: 30px; height: 20px;" Text="Movimientos: " ForeColor="White"></asp:Label>
+            <asp:Label ID="Label18" runat="server" Style = "position: absolute; top: 110px; left: 120px; height: 20px;" Text="numero de Turnos " ForeColor="White"></asp:Label>
+
+
+
+        </div>
     <div  style="position:absolute; width:800px; height: 400px; top: 20%; left: 33%;">
                 <link rel="stylesheet" href="../Content/EstiloTab.css">
         

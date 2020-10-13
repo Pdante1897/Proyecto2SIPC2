@@ -77,3 +77,15 @@ C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIP
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.dll
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.pdb
 C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\obj\Debug\Proyecto2SIPC2.csprojAssemblyReference.cache
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Helpers.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Mvc.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Razor.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.WebPages.Deployment.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.WebPages.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.WebPages.Razor.dll
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Helpers.xml
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Mvc.xml
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.Razor.xml
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.WebPages.xml
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.WebPages.Deployment.xml
+C:\Users\gerar\source\repos\Proyecto2SIPC2\Proyecto2SIPC2\bin\System.Web.WebPages.Razor.xml
