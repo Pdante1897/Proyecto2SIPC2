@@ -1,7 +1,9 @@
 ﻿using Proyecto2SIPC2.Clases;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
+using System.Threading;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
@@ -18,19 +20,13 @@ namespace Proyecto2SIPC2
         public Boolean partida;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuario"] == null)
+            {
+                Response.Redirect("~/login.aspx");
+            }
             Label4.Text = (string)Session["usuario"];
             Label6.Text = (string)Session["colorficha"];
             Label14.Text = (string)Session["colorficha2"];
-            if (!(Boolean)Session["jugador2"])
-            {
-                Label12.Text = "Maquina";
-
-
-            }
-            else
-            {
-                Label12.Text = (string)Session["j2"];
-            }
             if (!(Boolean)Session["partida"])
             {
                 Session["movimientosJ1"] = 0;
@@ -45,34 +41,138 @@ namespace Proyecto2SIPC2
 
                 Inicio();
                 MostrarTurno();
+                MovimientosPosibles((Boolean)Session["turno"]);
+
+                if (!(Boolean)Session["jugador2"])
+                {
+                    Label12.Text = "Maquina";
+                    if (Label19.Text == "Turno: Jugador 2")
+                    {
+                        TurnoMaquina();
+                    }
+                }
+                else
+                {
+                    Label12.Text = (string)Session["j2"];
+                }
             }
             else
             {
+                
                 AgregarBotones();
                 ImprimirFichas();
-
+                MovimientosPosibles((Boolean)Session["turno"]);
+                
             }
+        }
+        public void TurnoMaquina() 
+        {
+            ValidadAccion(Maquina());
+            Limpiar();
             MovimientosPosibles((Boolean)Session["turno"]);
-            
+            ImprimirFichas();
+            ImprimirMatriz((int[,])Session["matriz"]);
+            SumTurno();
+            MostrarTurno();
             ValidarGanadores();
+            
+
+        }
+        public Button Maquina()
+        {
+            List<Button> botones = (List<Button>)Session["botones"];
+            int[,] matriz = (int[,])Session["matriz"];
+            List<int[]> movimientos = new List<int[]>();
+            int contador = 0;
+            Random numR = new Random();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    int[] ficha = new int[3];
+                    if (matriz[i,j]==3)
+                    {
+                        contador++;
+                        ficha[0] = contador;
+                        ficha[1] = i;
+                        ficha[2] = j;
+                        movimientos.Add(ficha);
+                    }
+                }
+            }
+            if (contador==0)
+            {
+                return null;
+            }
+            int numero = numR.Next(1,contador);
+            string boton = null;
+            foreach (int[] item in movimientos)
+            {
+                if (numero == item[0])
+                {
+                   boton = Boton(item[1], item[2]);
+                }
+            }
+            foreach (Button item in botones)
+            {
+                if (boton==item.ID)
+                {
+                    return item;
+                }
+                
+                
+            }
+            return null;
+
+        }
+        public Partida Datos(int fichasJ1,int fichasJ2) 
+        {
+            Jugador jugador1 = new Jugador();
+            Jugador jugador2 = new Jugador();
+            Partida partida = new Partida();
+
+            jugador1.usuario= (string)Session["usuario"];
+            jugador1.fichas = fichasJ1;
+            jugador1.movimientos = (int)Session["movimientosJ1"];
+            jugador2.usuario = Label12.Text;
+            jugador2.fichas = fichasJ2;
+            jugador2.movimientos = (int)Session["movimientosJ2"];
+            partida.jugador1 = jugador1;
+            partida.jugador2 = jugador2;
+            if (!(Boolean)Session["jugador2"])
+            {
+                partida.tipo = "1 Jugador";
+            }
+            else
+            {
+                partida.tipo = "2 Jugadores";
+            }
+
+            return partida;
 
         }
         public void ValidarGanadores()
         {
+            Partida partida = new Partida();
             int[,] matriz = (int[,])Session["matriz"];
             int[] fichas = ContarFichas(matriz);
             int fichasN = fichas[0];
             int fichasB = fichas[1];
+            int fjugador1, fjugador2;
             Label10.Text = "" + (int)Session["movimientosJ1"];
             Label18.Text = "" + (int)Session["movimientosJ2"];
             if ((string)Session["colorficha"]=="Negro")
             {
+                fjugador1 = fichasN;
+                fjugador2 = fichasB;
                 Label8.Text = ""+fichasN;
                 Label16.Text = "" + fichasB;
                 
             }
             else
             {
+                fjugador1 = fichasB;
+                fjugador2 = fichasN;
                 Label8.Text = "" + fichasB;
                 Label16.Text = "" + fichasN;
             }
@@ -82,26 +182,44 @@ namespace Proyecto2SIPC2
             Boolean movTurnoAct = MovimientosPosibles((Boolean)Session["turno"]);
             if (fichasB + fichasN == 64 || !movTurnoAct && !movOtroJ)
             {
+                string resultado=null;
                 if (fichasN > fichasB)
                 {
                     string script = "alert('Ganan las Negras!');";
-
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+                    if ((string)Session["colorficha"] == "Negro")
+                    {
+                       resultado="Ganador";
+                    }
+                    else
+                    {
+                        resultado="Perdedor";
+                    }
                 }
                 else if (fichasB > fichasN)
                 {
                     string script = "alert('Ganan las Blancas!');";
 
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
-
+                    if ((string)Session["colorficha"] == "Negro")
+                    {
+                        resultado = "Ganador";
+                    }
+                    else
+                    {
+                        resultado = "Perdedor";
+                    }
                 }
                 else if (fichasB == fichasN)
                 {
                     string script = "alert('Empate!');";
-
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+                    resultado = "Empate";
 
                 }
+                partida = Datos(fjugador1, fjugador2);
+                partida.resultado = resultado;
+                RegistrarPartida(partida);
             }
             else if (movTurnoAct)
             {
@@ -115,10 +233,79 @@ namespace Proyecto2SIPC2
                 MovimientosPosibles((Boolean)Session["turno"]);
             }
 
+
+        }
+        public void RegistrarPartida(Partida partida) 
+        {
+            string cadena1, cadena2, cadena3;
+            cadena1 = ("insert into partida values (@tipo, 'Terminada')");
+            cadena2 = ("SELECT MAX(codigoPartida) from partida");
+            cadena3 = ("insert into participante values (@contrincante, @movimientos, @resultado, @codigo, @usuario, @fichasJ1, @fichasJ2)");
+            string connectionString = @"Data Source=DESKTOP-KTTU0OF; Initial Catalog = othello; Integrated Security=True;";
+            int id=0;
+            try
+            {
+
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlDa = new SqlCommand(cadena1, sqlCon);
+                    sqlDa.Parameters.AddWithValue("@tipo", partida.tipo);
+                    sqlDa.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlDa = new SqlCommand(cadena2, sqlCon);
+                    SqlDataReader lector = sqlDa.ExecuteReader();
+                    lector.Read();
+                    {
+                        id = int.Parse(lector.GetValue(0).ToString());
+                    }
+                    lector.Close();
+                    sqlCon.Close();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlDa = new SqlCommand(cadena3, sqlCon);
+                    sqlDa.Parameters.AddWithValue("@contrincante", partida.jugador2.usuario);
+                    sqlDa.Parameters.AddWithValue("@movimientos", partida.jugador1.movimientos);
+                    sqlDa.Parameters.AddWithValue("@resultado", partida.resultado);
+                    sqlDa.Parameters.AddWithValue("@codigo", id);
+                    sqlDa.Parameters.AddWithValue("@usuario", partida.jugador1.usuario);
+                    sqlDa.Parameters.AddWithValue("@fichasJ1", partida.jugador1.fichas);
+                    sqlDa.Parameters.AddWithValue("@fichasJ2", partida.jugador2.fichas);
+                    sqlDa.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+                string script = "alert('Datos Guardados!');";
+                ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+            }
+            catch (Exception)
+            {
+            }
         }
         protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
-            MovimientosPosibles((Boolean)Session["turno"]);
+            AgregarBotones();
+            ImprimirFichas();
             
         }
         public void MostrarTurno() 
@@ -196,18 +383,33 @@ namespace Proyecto2SIPC2
         }
         public void Click(object sender, EventArgs args)
         {
-           
+
             Button button = sender as Button;
-            ValidadAccion(button);
+            TurnoJugador(button);
+            if (!(Boolean)Session["jugador2"])
+            {
+                if (Label19.Text == "Turno: Jugador 2")
+                {
 
-            Limpiar();
-            MovimientosPosibles((Boolean)Session["turno"]);
-            ImprimirFichas();
-            ImprimirMatriz((int[,])Session["matriz"]);
-            SumTurno();
-            MostrarTurno();
-            ValidarGanadores();
+                    TurnoMaquina();
 
+                }
+            }
+
+        }
+        public void TurnoJugador(Button button) 
+        {
+            if (ValidadAccion(button)&& Label19.Text == "Turno: Jugador 1")
+            {
+                Limpiar();
+                MovimientosPosibles((Boolean)Session["turno"]);
+                ImprimirFichas();
+                ImprimirMatriz((int[,])Session["matriz"]);
+                SumTurno();
+                MostrarTurno();
+                ValidarGanadores();
+                
+            }
         }
         public void ImprimirMatriz(int[,] matriz)
         {
@@ -942,18 +1144,30 @@ namespace Proyecto2SIPC2
             }
 
         }
-        public void ValidadAccion(Button button)
+        public Boolean ValidadAccion(Button button)
         {
-            int[,] matriz = (int[,])Session["matriz"];
-            int[] posicion = Coordenada(button.ID);
-            if (matriz[posicion[0], posicion[1]] == 2 || matriz[posicion[0], posicion[1]] == 1 || matriz[posicion[0], posicion[1]] == 0)
+            
+            try
+            {
+                int[,] matriz = (int[,])Session["matriz"];
+                int[] posicion = Coordenada(button.ID);
+                if (matriz[posicion[0], posicion[1]] == 2 || matriz[posicion[0], posicion[1]] == 1 || matriz[posicion[0], posicion[1]] == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    Accion(button);
+                    return true;
+                }
+            }
+            catch (Exception)
             {
 
+                return false;
             }
-            else
-            {
-                Accion(button);
-            }
+            
+            
         }
         public void Accion(Button button)
         {
@@ -1066,8 +1280,6 @@ namespace Proyecto2SIPC2
             Session["botones"] = botones;
 
         }
-
-
         protected void Button1_Click(object sender, EventArgs e)
         {
 
@@ -1093,6 +1305,7 @@ namespace Proyecto2SIPC2
             {
                 Page.ClientScript.RegisterStartupScript(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Error! Seleccione un archivo XML" + "');</script>");
             }
+
         }
         public void CargarPartida()
         {
@@ -1163,7 +1376,6 @@ namespace Proyecto2SIPC2
             
 
         }
-
         public void LimpiarTablero(List<Ficha> fichas)
         {
             int[,] matriz = new int[8, 8];
@@ -1182,10 +1394,9 @@ namespace Proyecto2SIPC2
             Session["matriz"] = matriz;
             ImprimirMatriz(matriz);
             Limpiar();
-
+            
 
         }
-
         public void ImprimirFichas()
         {
             List<Ficha> fichas = (List<Ficha>)Session["fichas"];
@@ -1213,9 +1424,7 @@ namespace Proyecto2SIPC2
             }
             Session["botones"] = botones;
 
-
         }
-
         public void Ingresar(string coor)
         {
             Boolean turno = (Boolean)Session["turno"];
@@ -1256,7 +1465,6 @@ namespace Proyecto2SIPC2
             Session["turno"] = turno;
             Session["matriz"] = matriz;
         }
-
         public void ImprimirFicha(Ficha ficha)
         {
             List<Button> botones = (List<Button>)Session["botones"];
@@ -1280,11 +1488,6 @@ namespace Proyecto2SIPC2
             Session["botones"] = botones;
 
         }
-
-
-        
-
-
         public void Guardar()
         {
             Ficha ultima = (Ficha)Session["ultima"];
@@ -1323,18 +1526,34 @@ namespace Proyecto2SIPC2
             xmlWriter.Close();
 
         }
-
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            Session["movimientosJ1"] = 0;
+            Session["movimientosJ2"] = 0;
+            Session["partida"] = true;
+            Session["botones"] = botonesM;
+            AgregarBotones();
+            Session["matriz"] = matrizM;
+            Session["fichas"] = fichasM;
+            Session["ultima"] = ultimaM;
+            Session["turno"] = false; 
+            LimpiarTablero((List<Ficha>)Session["fichas"]);
+            Inicio();
+            ImprimirFichas();
+            MostrarTurno();
+            MovimientosPosibles(false);
+            ValidarGanadores();
+        }
         protected void Button2_Click(object sender, EventArgs e)
         {
             Guardar();
         }
-
         public void Inicio()
         {
             int[,] matriz = new int[8, 8];
             Random numR = new Random();
 
-            if (numR.Next(2) == 1)
+            if (numR.Next(1,2) == 1)
             {
                 matriz[3, 3] = 1;
                 matriz[3, 4] = 2;
@@ -1362,7 +1581,6 @@ namespace Proyecto2SIPC2
             Session["matriz"] = matriz;
 
         }
-
         public int[] Coordenada(string id)
         {
             int[] coordenada = new int[2];

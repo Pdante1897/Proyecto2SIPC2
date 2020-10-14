@@ -9,7 +9,7 @@
 
      </div>
     <div style=" height: 700px">
-        <div  style="border: 2px solid white; position: absolute; width: 296px; height: 315px; top: 20%; left: 13%;">
+        <div  style="border: 2px solid white; position: absolute; width: 296px; height: 428px; top: 20%; left: 13%;">
          
             <asp:Label ID="Label1" runat="server" Style = "position: absolute; top: 41px; left: 105px; height: 20px;" Text="Cargar Partida" ForeColor="White"></asp:Label>
          <asp:FileUpload ID="FileUpload1" runat="server" Style = "position: absolute; top: 81px; left: 14px;" />
@@ -19,9 +19,12 @@
          <asp:Label ID="Label2" runat="server" Style = "position: absolute; top: 212px; left: 102px;" Text="Guardar Partida" ForeColor="White"></asp:Label>
          <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Guardar" OnClick="Button2_Click"/>    
 
+         <asp:Label ID="Label20" runat="server" Style = "position: absolute; top: 316px; left: 106px;" Text="Nueva Partida" ForeColor="White"></asp:Label>
+         <asp:Button Style="position: absolute; top: 351px; left: 117px; height: 28px; width: 68px;" ID="Button3" runat="server" Text="Iniciar" OnClick="Button3_Click"/>    
+
         </div>
         
-        <asp:UpdatePanel ID="UpdatePanel1" runat="server" OnLoad="UpdatePanel1_Load">
+        <asp:UpdatePanel ID="UpdatePanel1" runat="server" OnLoad="UpdatePanel1_Load" UpdateMode="Conditional">
          <ContentTemplate>
             <asp:Label ID="Label19" runat="server" Style = "position: absolute;  left: 45%" Text="Truno:" ForeColor="White" Font-Size="Large"></asp:Label>
             <div  style=" border: 2px solid white; position:absolute; width:296px; height: 173px; top: 20%; left: 73%;">

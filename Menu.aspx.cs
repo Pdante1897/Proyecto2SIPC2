@@ -6,6 +6,10 @@ namespace Proyecto2SIPC2
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuario"] == null)
+            {
+                Response.Redirect("~/login.aspx");
+            }
             Label1.Text = "Jugador: "+(string)Session["usuario"];
             Session["partida"] = false;
             Session["menu"] = true;
