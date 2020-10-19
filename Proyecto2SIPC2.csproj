@@ -175,6 +175,7 @@
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <Content Include="Registro.aspx" />
+    <Content Include="JuegoExt.aspx" />
     <EntityDeploy Include="Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
@@ -238,6 +239,7 @@
     <Compile Include="Clases\Ficha.cs" />
     <Compile Include="Clases\Jugador.cs" />
     <Compile Include="Clases\Partida.cs" />
+    <Compile Include="Clases\Tablero.cs" />
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -334,6 +336,13 @@
     </Compile>
     <Compile Include="Registro.aspx.designer.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JuegoExt.aspx.cs">
+      <DependentUpon>JuegoExt.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JuegoExt.aspx.designer.cs">
+      <DependentUpon>JuegoExt.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

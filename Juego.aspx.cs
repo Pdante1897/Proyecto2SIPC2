@@ -62,7 +62,7 @@ namespace Proyecto2SIPC2
                 AgregarBotones();
                 ImprimirFichas();
                 MovimientosPosibles((Boolean)Session["turno"]);
-                
+                ValidarGanadores();
             }
         }
         public void TurnoMaquina() 
@@ -201,7 +201,7 @@ namespace Proyecto2SIPC2
                     string script = "alert('Ganan las Blancas!');";
 
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
-                    if ((string)Session["colorficha"] == "Negro")
+                    if ((string)Session["colorficha"] == "Blanco")
                     {
                         resultado = "Ganador";
                     }
@@ -399,7 +399,7 @@ namespace Proyecto2SIPC2
         }
         public void TurnoJugador(Button button) 
         {
-            if (ValidadAccion(button)&& Label19.Text == "Turno: Jugador 1")
+            if (ValidadAccion(button))
             {
                 Limpiar();
                 MovimientosPosibles((Boolean)Session["turno"]);
