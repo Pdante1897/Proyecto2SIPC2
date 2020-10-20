@@ -1475,12 +1475,12 @@ namespace Proyecto2SIPC2
                 {
                     if (ficha.color.Equals("blanco"))
                     {
-                        item.Attributes.Add("style", "border-radius: 100%; background-color: White;");
+                        item.Attributes.Add("style", "Height: 60px; Width: 60px; border-radius: 100%; background-color: White;");
 
                     }
                     else
                     {
-                        item.Attributes.Add("style", "border-radius: 100%; background-color: Black;");
+                        item.Attributes.Add("style", "Height: 60px; Width: 60px; border-radius: 100%; background-color: Black;");
 
                     }
                 }

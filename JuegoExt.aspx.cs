@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proyecto2SIPC2.Clases;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,19 +11,30 @@ namespace Proyecto2SIPC2
 {
     public partial class WebForm3 : System.Web.UI.Page
     {
+        
+        private List<Button> botonesM = new List<Button>();
+        public List<Ficha> fichasM = new List<Ficha>();
+        public Ficha ultimaM = new Ficha();
+        public int[,] matrizM = new int[8, 8];
+        public Boolean partida;
         protected void Page_Load(object sender, EventArgs e)
         {
-            Tablero();
+            Session["movimientosJ1"] = 0;
+            Session["movimientosJ2"] = 0;
+            Session["partida"] = true;
+            Session["botones"] = botonesM;
+            Session["matriz"] = matrizM;
+            Session["fichas"] = fichasM;
+            Session["ultima"] = ultimaM;
+            Session["turno"] = false;
+            Tablero(int.Parse(DropDownList1.SelectedValue), int.Parse(DropDownList1.SelectedValue));
             Juego a = new Juego();
-            List<Button> botones = new List<Button>();
-            Session["botonesEx"] = botones;
+            a.Inicio();
         }
-        public void Tablero() 
+        public void Tablero(int fila, int columna) 
         {
             List<Button> lista = new List<Button>();
             Table tab = new Table();
-            int fila = 10;
-            int columna = 10;
             for (int j = 0; j < fila+2; j++)
             {
                 TableRow fil = new TableRow();
@@ -34,6 +46,7 @@ namespace Proyecto2SIPC2
                     {
                         Label label = new Label();
                         label.Width = 60;
+                        label.Height = 60;
                         col = new TableCell();
                         col.Controls.Add(label);
                         col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: red; ");
@@ -152,11 +165,11 @@ namespace Proyecto2SIPC2
                     else if (i>0)
                     {
                         col = new TableCell();
-                        col.Attributes.Add("style", "height: 60px; width: 60px; background-color: White; ");
+                        col.Attributes.Add("style", "height: 60px; border: 1px solid black; width: 60px; background-color: White; ");
                         Button boton = new Button();
                         boton.ID = Boton(i-1, j - 1);
                         System.Diagnostics.Debug.Write(boton.ID + " ");
-                        boton.Attributes.Add("style", "height: 60px; width: 60px; border-radius: 100%; background-color: Transparent; ");
+                        boton.Attributes.Add("style", "height: 60px; border: none; width: 60px; border-radius: 100%; background-color: Transparent; ");
                         lista.Add(boton);
                         col.Controls.Add(boton);
                         fil.Cells.Add(col);
@@ -170,6 +183,7 @@ namespace Proyecto2SIPC2
 
             }
             Panel1.Controls.Add(tab);
+            Session["botones"] = lista;
             foreach (Button item in lista)
             {
                 System.Diagnostics.Debug.WriteLine(item.ID);
@@ -268,5 +282,7 @@ namespace Proyecto2SIPC2
             }
             return boton;
         }
+
+        
     }
 }
