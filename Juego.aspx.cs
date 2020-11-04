@@ -41,7 +41,7 @@ namespace Proyecto2SIPC2
 
                 Inicio();
                 MostrarTurno();
-                MovimientosPosibles((Boolean)Session["turno"]);
+                MovimientosPosibles((Boolean)Session["turno"],8,8);
 
                 if (!(Boolean)Session["jugador2"])
                 {
@@ -61,7 +61,7 @@ namespace Proyecto2SIPC2
                 
                 AgregarBotones();
                 ImprimirFichas();
-                MovimientosPosibles((Boolean)Session["turno"]);
+                MovimientosPosibles((Boolean)Session["turno"],8,8);
                 ValidarGanadores();
             }
         }
@@ -69,9 +69,9 @@ namespace Proyecto2SIPC2
         {
             ValidadAccion(Maquina());
             Limpiar();
-            MovimientosPosibles((Boolean)Session["turno"]);
+            MovimientosPosibles((Boolean)Session["turno"],8,8);
             ImprimirFichas();
-            ImprimirMatriz((int[,])Session["matriz"]);
+            ImprimirMatriz((int[,])Session["matriz"],8,8);
             SumTurno();
             MostrarTurno();
             ValidarGanadores();
@@ -176,10 +176,10 @@ namespace Proyecto2SIPC2
                 Label8.Text = "" + fichasB;
                 Label16.Text = "" + fichasN;
             }
-            Boolean movOtroJ = MovimientosPosibles(!(Boolean)Session["turno"]);
+            Boolean movOtroJ = MovimientosPosibles(!(Boolean)Session["turno"],8,8);
             Limpiar();
 
-            Boolean movTurnoAct = MovimientosPosibles((Boolean)Session["turno"]);
+            Boolean movTurnoAct = MovimientosPosibles((Boolean)Session["turno"],8,8);
             if (fichasB + fichasN == 64 || !movTurnoAct && !movOtroJ)
             {
                 string resultado=null;
@@ -230,7 +230,7 @@ namespace Proyecto2SIPC2
                 Session["turno"] = !(Boolean)Session["turno"];
                 string script = "alert('No puedes mover! :c');";
                 ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
-                MovimientosPosibles((Boolean)Session["turno"]);
+                MovimientosPosibles((Boolean)Session["turno"],8,8);
             }
 
 
@@ -401,23 +401,24 @@ namespace Proyecto2SIPC2
         {
             if (ValidadAccion(button))
             {
+                Accion(button);
                 Limpiar();
-                MovimientosPosibles((Boolean)Session["turno"]);
+                MovimientosPosibles((Boolean)Session["turno"],8,8);
                 ImprimirFichas();
-                ImprimirMatriz((int[,])Session["matriz"]);
+                ImprimirMatriz((int[,])Session["matriz"],8,8);
                 SumTurno();
                 MostrarTurno();
                 ValidarGanadores();
                 
             }
         }
-        public void ImprimirMatriz(int[,] matriz)
+        public void ImprimirMatriz(int[,] matriz, int columnas, int filas)
         {
-            for (int i = 0; i < 8; i++)
+            for (int j = 0; j < filas; j++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int i = 0; i < columnas; i++)
                 {
-                    System.Diagnostics.Debug.Write(+matriz[j, i] + " ");
+                    System.Diagnostics.Debug.Write(matriz[i, j] + " ");
 
                 }
                 System.Diagnostics.Debug.WriteLine(" ");
@@ -824,7 +825,7 @@ namespace Proyecto2SIPC2
             }
             Session["matriz"] = ImprimirMov(colorT, matriz);
         }
-        public Boolean MovimientosPosibles(Boolean turno)
+        public Boolean MovimientosPosibles(Boolean turno, int columnas, int filas)
         {
             List<Button> botones = (List<Button>)Session["botones"];
             int[,] matriz = (int[,])Session["matriz"];
@@ -840,13 +841,13 @@ namespace Proyecto2SIPC2
                 color = 1;
                 colorT = 2;
             }
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < columnas; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < filas; j++)
                 {
                     if (matriz[i, j] == color)
                     {
-                        for (int k = i; k < 8; k++)
+                        for (int k = i; k < columnas; k++)
                         {
                             if (i - 1>=0)
                             {
@@ -878,7 +879,7 @@ namespace Proyecto2SIPC2
                         }
                         for (int k = i; k >= 0; k--)
                         {
-                            if (i+1<8)
+                            if (i+1<columnas)
                             {
                                 if ((matriz[i + 1, j] == 0) && (matriz[k, j] == colorT))
                                 {
@@ -905,7 +906,7 @@ namespace Proyecto2SIPC2
                             }
 
                         }
-                        for (int k = j; k < 8; k++)
+                        for (int k = j; k < filas; k++)
                         {
                             if(j-1>=0)
                             {
@@ -936,7 +937,7 @@ namespace Proyecto2SIPC2
                         }
                         for (int k = j; k >= 0; k--)
                         {
-                            if (j+1<8)
+                            if (j+1<filas)
                             {
                                 if ((matriz[i, j + 1] == 0) && (matriz[i, k] == colorT))
                                 {
@@ -964,9 +965,9 @@ namespace Proyecto2SIPC2
 
                         }
                         int col = j;
-                        for (int k = i; k < 8; k++)
+                        for (int k = i; k < columnas; k++)
                         {
-                            if(i-1>=0 && j-1>=0 && col<8)
+                            if(i-1>=0 && j-1>=0 && col<columnas)
                             {
                                 if ((matriz[i - 1, j - 1] == 0) && (matriz[k, col] == colorT))
                                 {
@@ -996,7 +997,7 @@ namespace Proyecto2SIPC2
 
                         }
                         col = j;
-                        for (int k = i; k < 8; k++)
+                        for (int k = i; k < columnas; k++)
                         {
                             if(i-1>=0 && j+1<8 && col>=0)
                             {
@@ -1030,7 +1031,7 @@ namespace Proyecto2SIPC2
                         col = j;
                         for (int k = i; k >= 0; k--)
                         {
-                            if(i+1<8&& j-1>=0 && col<8)
+                            if(i+1<columnas&& j-1>=0 && col<columnas)
                             {
                                 if ((matriz[i + 1, j - 1] == 0) && (matriz[k, col] == colorT))
                                 {
@@ -1061,7 +1062,7 @@ namespace Proyecto2SIPC2
                         col = j;
                         for (int k = i; k >= 0; k--)
                         {
-                            if(i+1<8 && j+1<8 && col>=0)
+                            if(i+1<columnas && j+1<filas && col>=0)
                             {
                                 if ((matriz[i + 1, j + 1] == 0) && (matriz[k, col] == colorT))
                                 {
@@ -1157,7 +1158,6 @@ namespace Proyecto2SIPC2
                 }
                 else
                 {
-                    Accion(button);
                     return true;
                 }
             }
@@ -1370,7 +1370,7 @@ namespace Proyecto2SIPC2
                 Session["turno"] = turno;
 
             }
-            MovimientosPosibles(turno);
+            MovimientosPosibles(turno,8,8);
             ValidarGanadores();
             MostrarTurno();
             
@@ -1392,7 +1392,7 @@ namespace Proyecto2SIPC2
                 }
             }
             Session["matriz"] = matriz;
-            ImprimirMatriz(matriz);
+            ImprimirMatriz(matriz,8,8);
             Limpiar();
             
 
@@ -1410,12 +1410,12 @@ namespace Proyecto2SIPC2
                     {
                         if (fi.color.Equals("blanco"))
                         {
-                            item.Attributes.Add("style", "border-radius: 100%; background-color: White;");
+                            item.Attributes.Add("style", "height: 60px; width: 60px; border-radius: 100%; background-color: White;");
 
                         }
                         else
                         {
-                            item.Attributes.Add("style", "border-radius: 100%; background-color: Black;");
+                            item.Attributes.Add("style", "height: 60px; width: 60px; border-radius: 100%; background-color: Black;");
 
                         }
 
@@ -1541,7 +1541,7 @@ namespace Proyecto2SIPC2
             Inicio();
             ImprimirFichas();
             MostrarTurno();
-            MovimientosPosibles(false);
+            MovimientosPosibles(false,8,8);
             ValidarGanadores();
         }
         protected void Button2_Click(object sender, EventArgs e)
@@ -1585,39 +1585,97 @@ namespace Proyecto2SIPC2
         {
             int[] coordenada = new int[2];
             char[] posicion = id.ToCharArray();
+            string numero;
+            try
+            {
+                 numero = posicion[1].ToString() + posicion[2].ToString();
+
+            }
+            catch (Exception)
+            {
+                 numero = posicion[1].ToString();
+            }
             switch (id[0])
             {
                 case 'A':
                     coordenada[0] = 0;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 case 'B':
                     coordenada[0] = 1;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 case 'C':
                     coordenada[0] = 2;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 case 'D':
                     coordenada[0] = 3;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 case 'E':
                     coordenada[0] = 4;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 case 'F':
                     coordenada[0] = 5;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 case 'G':
                     coordenada[0] = 6;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 case 'H':
                     coordenada[0] = 7;
-                    coordenada[1] = int.Parse(posicion[1].ToString()) - 1;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'I':
+                    coordenada[0] = 8;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'J':
+                    coordenada[0] = 9;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'K':
+                    coordenada[0] = 10;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'L':
+                    coordenada[0] = 11;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'M':
+                    coordenada[0] = 12;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'N':
+                    coordenada[0] = 13;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'O':
+                    coordenada[0] = 14;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'P':
+                    coordenada[0] = 15;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'Q':
+                    coordenada[0] = 16;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'R':
+                    coordenada[0] = 17;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'S':
+                    coordenada[0] = 18;
+                    coordenada[1] = int.Parse(numero) - 1;
+                    break;
+                case 'T':
+                    coordenada[0] = 19;
+                    coordenada[1] = int.Parse(numero) - 1;
                     break;
                 default:
                     break;

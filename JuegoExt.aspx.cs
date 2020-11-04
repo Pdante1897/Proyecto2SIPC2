@@ -11,7 +11,6 @@ namespace Proyecto2SIPC2
 {
     public partial class WebForm3 : System.Web.UI.Page
     {
-        
         private List<Button> botonesM = new List<Button>();
         public List<Ficha> fichasM = new List<Ficha>();
         public Ficha ultimaM = new Ficha();
@@ -19,19 +18,40 @@ namespace Proyecto2SIPC2
         public Boolean partida;
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["movimientosJ1"] = 0;
-            Session["movimientosJ2"] = 0;
-            Session["partida"] = true;
-            Session["botones"] = botonesM;
-            Session["matriz"] = matrizM;
-            Session["fichas"] = fichasM;
-            Session["ultima"] = ultimaM;
-            Session["turno"] = false;
-            Tablero(int.Parse(DropDownList1.SelectedValue), int.Parse(DropDownList1.SelectedValue));
-            Juego a = new Juego();
-            a.Inicio();
+            AgregarCheck();
+            if (!(Boolean)Session["partida"])
+            {
+                Session["movimientosJ1"] = 0;
+                Session["movimientosJ2"] = 0;
+                Session["partida"] = true;
+                Session["matriz"] = matrizM;
+                Session["fichas"] = fichasM;
+                Session["ultima"] = ultimaM;
+                Session["turno"] = false;
+                Session["tablero"] = null;
+            }
+            else
+            {
+                if (Session["tablero"]!=null)
+                {
+                    Tablero(int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue));
+                    ImprimirBotones();
+                }                
+            }
         }
-        public void Tablero(int fila, int columna) 
+        public void ImprimirBotones()
+        {
+            Juego metodos = new Juego();
+            List<Button> lista = (List<Button>)Session["Botones"];
+            foreach (Button item in lista)
+            {
+                item.Width = 60;
+                item.Height = 60;
+            }
+            metodos.ImprimirFichas();
+
+        }
+        public void Tablero(int columna, int fila) 
         {
             List<Button> lista = new List<Button>();
             Table tab = new Table();
@@ -49,7 +69,7 @@ namespace Proyecto2SIPC2
                         label.Height = 60;
                         col = new TableCell();
                         col.Controls.Add(label);
-                        col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: red; ");
+                        col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                         fil.Cells.Add(col);
                         continue;
 
@@ -62,10 +82,10 @@ namespace Proyecto2SIPC2
                             col = new TableCell();
                             char letras = Boton(k, 1).ElementAt(0);
                             label.Text = ".     " + letras.ToString();
-                            label.Font.Size = 20;
+                            label.Font.Size = 18;
 
                             col.Controls.Add(label);
-                            col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: red; ");
+                            col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                             fil.Cells.Add(col);
                         }
                         i = columna;
@@ -79,10 +99,10 @@ namespace Proyecto2SIPC2
                             col = new TableCell();
                             char letras = Boton(k, 1).ElementAt(0);
                             label.Text = ".     " + letras.ToString();
-                            label.Font.Size = 20;
+                            label.Font.Size = 18;
 
                             col.Controls.Add(label);
-                            col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: red; ");
+                            col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                             fil.Cells.Add(col);
                         }
                         i = columna;
@@ -98,9 +118,9 @@ namespace Proyecto2SIPC2
                             col = new TableCell();
                             char letras = Boton(k, 1).ElementAt(0);
                             label.Text = ".     " + letras.ToString();
-                            label.Font.Size = 20;
+                            label.Font.Size = 18;
                             col.Controls.Add(label);
-                            col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: red; ");
+                            col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                             fil.Cells.Add(col);
                             
 
@@ -126,10 +146,10 @@ namespace Proyecto2SIPC2
                             char letras = Boton(i, j - 1).ElementAt(1);
                             label.Text = ".     "+ letras.ToString();
                         }
-                        label.Font.Size=20;
+                        label.Font.Size=18;
                         label.Width = 60;
                         col.Controls.Add(label);
-                        col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: red; ");
+                        col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                         fil.Cells.Add(col);
                          
                         continue;
@@ -152,10 +172,10 @@ namespace Proyecto2SIPC2
                             char letras = Boton(1, j - 1).ElementAt(1);
                             label.Text = ".     " + letras.ToString();
                         }
-                        label.Font.Size = 20;
+                        label.Font.Size = 18;
                         label.Width = 60;
                         col.Controls.Add(label);
-                        col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: red; ");
+                        col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                         fil.Cells.Add(col);
 
                         continue;
@@ -165,10 +185,12 @@ namespace Proyecto2SIPC2
                     else if (i>0)
                     {
                         col = new TableCell();
-                        col.Attributes.Add("style", "height: 60px; border: 1px solid black; width: 60px; background-color: White; ");
+                        col.Attributes.Add("style", "height: 60px; border: 1px solid black; width: 60px; background-color: rgb(129,75,27); ");
                         Button boton = new Button();
+                        boton.Click += new EventHandler(Click);
                         boton.ID = Boton(i-1, j - 1);
                         System.Diagnostics.Debug.Write(boton.ID + " ");
+                        boton.CssClass = "ficha";
                         boton.Attributes.Add("style", "height: 60px; border: none; width: 60px; border-radius: 100%; background-color: Transparent; ");
                         lista.Add(boton);
                         col.Controls.Add(boton);
@@ -184,17 +206,26 @@ namespace Proyecto2SIPC2
             }
             Panel1.Controls.Add(tab);
             Session["botones"] = lista;
+            Session["tablero"] = tab;
             foreach (Button item in lista)
             {
                 System.Diagnostics.Debug.WriteLine(item.ID);
 
             }
         }
+        public void Click(object sender, EventArgs args)
+        {
+            Juego metodos = new Juego();
+            Button button = sender as Button;
+            if (metodos.ValidadAccion(button))
+            {
+               
+                Accion(button);
+            }
+        }
         protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
-            
         }
-
         public string Boton(int i, int k)
         {
             int j = k + 1;
@@ -282,7 +313,177 @@ namespace Proyecto2SIPC2
             }
             return boton;
         }
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            Session["movimientosJ1"] = 0;
+            Session["movimientosJ2"] = 0;
+            Session["partida"] = true;
+            Session["botones"] = botonesM;
+            Session["matriz"] = new int[int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue)];
+            Session["fichas"] = fichasM;
+            Session["ultima"] = ultimaM;
+            Session["turno"] = false;
+            Session["tablero"] = null; 
+            Tablero(int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue));
+            Session["columnas"] = int.Parse(DropDownList2.SelectedValue)-1;
+            Session["filas"] = int.Parse(DropDownList1.SelectedValue)-1;
+            AperturaPersonalizada(true);
+            ImprimirBotones();
+            Juego metodos = new Juego();
+            ImprimirMatriz((int[,])Session["matriz"], (int)Session["columnas"]+1, (int)Session["filas"]+1);
+        }
+        public void ImprimirMatriz(int[,] matriz, int columnas, int filas)
+        {
+            for (int j = 0; j < filas; j++)
+            {
+                for (int i = 0; i < columnas; i++)
+                {
+                    System.Diagnostics.Debug.Write(matriz[i, j] + " ");
 
-        
+                }
+                System.Diagnostics.Debug.WriteLine(" ");
+
+            }
+            System.Diagnostics.Debug.WriteLine(" ");
+        }
+        public void Accion(Button button)
+        {
+            Juego metodos = new Juego();
+            Ficha ultima = (Ficha)Session["ultima"];
+            Boolean turno = (Boolean)Session["turno"];
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            int[,] matriz = (int[,])Session["matriz"];
+            Ficha ficha = new Ficha();
+            int[] posicionM = metodos.Coordenada(button.ID);
+            if (turno)
+            {
+                ficha.color = "blanco";
+                matriz[posicionM[0], posicionM[1]] = 1;
+
+            }
+            else
+            {
+                ficha.color = "negro";
+                matriz[posicionM[0], posicionM[1]] = 2;
+
+            }
+            char[] posicion = button.ID.ToCharArray();
+            ficha.columna = posicion[0].ToString();
+            string numero;
+            try
+            {
+                numero = posicion[1].ToString() + posicion[2].ToString();
+
+            }
+            catch (Exception)
+            {
+                numero = posicion[1].ToString();
+            }
+            ficha.fila = numero;
+            fichas.Add(ficha);
+            //Movimiento(ficha, (Boolean)Session["turno"], matriz);
+            metodos.ImprimirFicha(ficha);
+
+            if (!turno)
+            {
+                ultima.color = "negra";
+            }
+            else
+            {
+                ultima.color = "blanca";
+            }
+
+            Session["fichas"] = fichas;
+            Session["ultima"] = ultima;
+            Session["turno"] = !turno;
+        }
+        public Boolean AperturaPersonalizada(Boolean estado) 
+        {
+            List<Button> lista = (List<Button>)Session["botones"];
+            int columnas=(int)Session["columnas"]+1,  filas = (int)Session["filas"]+1;
+            int centroC = (columnas) / 2;
+            int centroF = (filas) / 2;
+            int[,] matriz = (int[,])Session["matriz"];
+            if (estado)
+            {
+                for (int i = 0; i < columnas; i++)
+                {
+                    for (int j = 0; j < filas; j++)
+                    {
+                        matriz[i, j] = 0;
+                    }
+                }
+                matriz[centroC - 1, centroF - 1] = 3;
+                matriz[centroC, centroF - 1] = 3;
+                matriz[centroC - 1, centroF] = 3;
+                matriz[centroC, centroF] = 3;
+                string boton1 = Boton(centroC - 1, centroF - 1);
+                string boton2 = Boton(centroC, centroF - 1);
+                string boton3 = Boton(centroC - 1, centroF);
+                string boton4 = Boton(centroC, centroF);
+
+                foreach (Button item in lista)
+                {
+                    if (item.ID==boton1|| item.ID == boton2|| item.ID == boton3|| item.ID == boton4)
+                    {
+                        item.Attributes.Add("style", "border-radius: 100%; border-bottom-color: black; background-color:transparent;");
+                    }
+
+                }
+                Session["botones"] = lista;
+                return false;
+            }
+            return true;
+        }
+
+        protected void CheckBox_CheckedChanged(object sender, EventArgs e) 
+        {
+            CheckBox check = sender as CheckBox;
+            List<CheckBox> lista = (List<CheckBox>)Session["check"];
+            foreach (CheckBox item in lista)
+            {
+                if (item.ID==check.ID)
+                {
+                    continue;
+                }
+                if (item.ID != check.ID && item.Text==check.Text && check.Checked)
+                {
+                    item.Enabled = false;
+                    
+                }
+                if (item.ID != check.ID && item.Text == check.Text && !check.Checked)
+                {
+                    item.Enabled = true;
+
+                }
+            }
+        }
+        public void AgregarCheck() 
+        {
+            List<CheckBox> lista = new List<CheckBox>();
+            lista.Add(CheckBox1);
+            lista.Add(CheckBox2);
+            lista.Add(CheckBox3);
+            lista.Add(CheckBox4);
+            lista.Add(CheckBox5);
+            lista.Add(CheckBox6);
+            lista.Add(CheckBox7);
+            lista.Add(CheckBox8);
+            lista.Add(CheckBox9);
+            lista.Add(CheckBox10);
+            lista.Add(CheckBox11);
+            lista.Add(CheckBox12);
+            lista.Add(CheckBox13);
+            lista.Add(CheckBox14);
+            lista.Add(CheckBox15);
+            lista.Add(CheckBox16);
+            lista.Add(CheckBox17);
+            lista.Add(CheckBox18);
+            lista.Add(CheckBox19);
+            lista.Add(CheckBox20);
+            Session["check"] = lista;
+        }
     }
+    
+
 }

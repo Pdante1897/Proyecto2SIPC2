@@ -3,7 +3,10 @@
 .cuadroB button {
     background-color: transparent;
 }
-
+.ficha {
+    width: 60px;
+    height: 60px;
+}
 .cafe h1 {
     text-align: center;
 }
