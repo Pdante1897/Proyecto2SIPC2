@@ -36,9 +36,14 @@ namespace Proyecto2SIPC2
                 {
                     Tablero(int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue));
                     ImprimirBotones();
+                    List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+                    Juego metodos = new Juego();
+                    
                 }                
             }
-        }
+            
+            }
+        
         public void ImprimirBotones()
         {
             Juego metodos = new Juego();
@@ -215,13 +220,35 @@ namespace Proyecto2SIPC2
         }
         public void Click(object sender, EventArgs args)
         {
+            List<Ficha> fichas=(List<Ficha>)Session["fichas"];
+            Boolean turno = (Boolean)Session["turno"];
             Juego metodos = new Juego();
             Button button = sender as Button;
-            if (metodos.ValidadAccion(button))
+            if (fichas.Count >= 4)
             {
-               
-                Accion(button);
+                if (metodos.ValidadAccion(button))
+                {
+                    Accion(button);
+                    metodos.Limpiar((int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+                    metodos.MovimientosPosibles((Boolean)Session["turno"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+
+                }
             }
+            else if (AperturaPersonalizada(false)) 
+            {
+                if (metodos.ValidadAccion(button))
+                {
+                    Accion(button);
+                    if (fichas.Count == 4)
+                    {
+                        metodos.MovimientosPosibles((Boolean)Session["turno"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+
+                    }
+
+                }
+            }
+
+            
         }
         protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
@@ -315,6 +342,19 @@ namespace Proyecto2SIPC2
         }
         protected void Button3_Click(object sender, EventArgs e)
         {
+            if (ListadeColores())
+            {
+                Iniciar();
+            }
+            else
+            {
+                string script = "alert('Debe elegir la misma cantidad de colores!');";
+                ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+            }
+            
+        }
+        public void Iniciar() 
+        {
             Session["movimientosJ1"] = 0;
             Session["movimientosJ2"] = 0;
             Session["partida"] = true;
@@ -323,14 +363,13 @@ namespace Proyecto2SIPC2
             Session["fichas"] = fichasM;
             Session["ultima"] = ultimaM;
             Session["turno"] = false;
-            Session["tablero"] = null; 
+            Session["tablero"] = null;
             Tablero(int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue));
-            Session["columnas"] = int.Parse(DropDownList2.SelectedValue)-1;
-            Session["filas"] = int.Parse(DropDownList1.SelectedValue)-1;
+            Session["columnas"] = int.Parse(DropDownList2.SelectedValue) - 1;
+            Session["filas"] = int.Parse(DropDownList1.SelectedValue) - 1;
             AperturaPersonalizada(true);
             ImprimirBotones();
-            Juego metodos = new Juego();
-            ImprimirMatriz((int[,])Session["matriz"], (int)Session["columnas"]+1, (int)Session["filas"]+1);
+            ImprimirMatriz((int[,])Session["matriz"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
         }
         public void ImprimirMatriz(int[,] matriz, int columnas, int filas)
         {
@@ -381,7 +420,7 @@ namespace Proyecto2SIPC2
             }
             ficha.fila = numero;
             fichas.Add(ficha);
-            //Movimiento(ficha, (Boolean)Session["turno"], matriz);
+            metodos.Movimiento(ficha, turno, (int[,])Session["matriz"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
             metodos.ImprimirFicha(ficha);
 
             if (!turno)
@@ -461,6 +500,8 @@ namespace Proyecto2SIPC2
         public void AgregarCheck() 
         {
             List<CheckBox> lista = new List<CheckBox>();
+            List<CheckBox> listaJ1 = new List<CheckBox>();
+            List<CheckBox> listaJ2 = new List<CheckBox>();
             lista.Add(CheckBox1);
             lista.Add(CheckBox2);
             lista.Add(CheckBox3);
@@ -481,9 +522,73 @@ namespace Proyecto2SIPC2
             lista.Add(CheckBox18);
             lista.Add(CheckBox19);
             lista.Add(CheckBox20);
+            listaJ1.Add(CheckBox1);
+            listaJ1.Add(CheckBox2);
+            listaJ1.Add(CheckBox3);
+            listaJ1.Add(CheckBox4);
+            listaJ1.Add(CheckBox5);
+            listaJ1.Add(CheckBox6);
+            listaJ1.Add(CheckBox7);
+            listaJ1.Add(CheckBox8);
+            listaJ1.Add(CheckBox9);
+            listaJ1.Add(CheckBox10);
+            listaJ2.Add(CheckBox11);
+            listaJ2.Add(CheckBox12);
+            listaJ2.Add(CheckBox13);
+            listaJ2.Add(CheckBox14);
+            listaJ2.Add(CheckBox15);
+            listaJ2.Add(CheckBox16);
+            listaJ2.Add(CheckBox17);
+            listaJ2.Add(CheckBox18);
+            listaJ2.Add(CheckBox19);
+            listaJ2.Add(CheckBox20);
             Session["check"] = lista;
+            Session["checkJ1"] = listaJ1;
+            Session["checkJ2"] = listaJ2;
+
+        }
+
+        public Boolean ListadeColores() 
+        {
+
+            List<String> jugador1 = new List<string>();
+            List<String> jugador2 = new List<string>();
+            List<CheckBox> listaJ1 = (List<CheckBox>)Session["checkJ1"];
+            List<CheckBox> listaJ2 = (List<CheckBox>)Session["checkJ2"];
+            foreach (CheckBox item in listaJ1)
+            {
+                if (item.Checked)
+                {
+                    jugador1.Add(item.Text);
+                }
+            }
+            foreach (CheckBox item in listaJ2)
+            {
+                if (item.Checked)
+                {
+                    jugador2.Add(item.Text);
+                }
+            }
+            if (jugador1.Count==0 && jugador2.Count==0)
+            {
+                return false;
+            }
+            else if (jugador1.Count==jugador2.Count)
+            {
+                Session["coloresJ1"] = jugador1;
+                Session["coloresJ2"] = jugador2;
+                return true;
+            }
+            else
+            {
+                Session["coloresJ1"] = null;
+                Session["coloresJ2"] = null;
+                return false;
+            }
+
         }
     }
+    
     
 
 }

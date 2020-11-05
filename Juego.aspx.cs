@@ -68,7 +68,7 @@ namespace Proyecto2SIPC2
         public void TurnoMaquina() 
         {
             ValidadAccion(Maquina());
-            Limpiar();
+            Limpiar(8,8);
             MovimientosPosibles((Boolean)Session["turno"],8,8);
             ImprimirFichas();
             ImprimirMatriz((int[,])Session["matriz"],8,8);
@@ -177,7 +177,7 @@ namespace Proyecto2SIPC2
                 Label16.Text = "" + fichasN;
             }
             Boolean movOtroJ = MovimientosPosibles(!(Boolean)Session["turno"],8,8);
-            Limpiar();
+            Limpiar(8,8);
 
             Boolean movTurnoAct = MovimientosPosibles((Boolean)Session["turno"],8,8);
             if (fichasB + fichasN == 64 || !movTurnoAct && !movOtroJ)
@@ -356,14 +356,14 @@ namespace Proyecto2SIPC2
             }
 
         }
-        public void Limpiar()
+        public void Limpiar(int columnas, int filas)
         {
             List<Button> botones = (List<Button>)Session["botones"];
             int[,] matriz = (int[,])Session["matriz"];
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < columnas; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < filas; j++)
                 {
                     if (matriz[i, j] == 3 || matriz[i, j] == 0)
                     {
@@ -402,7 +402,7 @@ namespace Proyecto2SIPC2
             if (ValidadAccion(button))
             {
                 Accion(button);
-                Limpiar();
+                Limpiar(8,8);
                 MovimientosPosibles((Boolean)Session["turno"],8,8);
                 ImprimirFichas();
                 ImprimirMatriz((int[,])Session["matriz"],8,8);
@@ -426,12 +426,12 @@ namespace Proyecto2SIPC2
             }
             System.Diagnostics.Debug.WriteLine(" ");
         }
-        public int[,] ImprimirMov(int turno, int[,] matriz)
+        public int[,] ImprimirMov(int turno, int[,] matriz, int columnas, int filas)
         {
             List<Ficha> fichas = (List<Ficha>)Session["fichas"];
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < columnas; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < filas; j++)
                 {
                     if (matriz[i, j] == 4)
                     {
@@ -461,7 +461,7 @@ namespace Proyecto2SIPC2
             return matriz;
 
         }
-        public void Movimiento(Ficha ficha, Boolean turno, int[,] matriz)
+        public void Movimiento(Ficha ficha, Boolean turno, int[,] matriz, int columnas, int filas)
         {
 
             int color, colorT, movHP = 0, movHN = 0, movVN = 0, movVP = 0, movDiP = 0, movDiN = 0, movDP = 0, movDN = 0;
@@ -478,7 +478,7 @@ namespace Proyecto2SIPC2
                 color = 1;
                 colorT = 2;
             }
-            for (int col = posicionM[0] + 1; col < 8; col++)
+            for (int col = posicionM[0] + 1; col < columnas; col++)
             {
                 try
                 {
@@ -492,7 +492,7 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[col, fil] == color && matriz[col + 1, fil] == colorT)
                     {
-                        if (posicionM[0] + movHP < 8)
+                        if (posicionM[0] + movHP < columnas)
                         {
                             for (int i = posicionM[0]; i < posicionM[0] + movHP; i++)
                             {
@@ -601,7 +601,7 @@ namespace Proyecto2SIPC2
 
                 }
             }
-            for (int fila = posicionM[1] + 1; fila < 8; fila++)
+            for (int fila = posicionM[1] + 1; fila < filas; fila++)
             {
                 try
                 {
@@ -615,7 +615,7 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[colum, fila] == color && matriz[colum, fila + 1] == colorT)
                     {
-                        if (posicionM[1] + movVN < 8)
+                        if (posicionM[1] + movVN < filas)
                         {
                             for (int i = posicionM[1]; i < posicionM[1] + movVN; i++)
                             {
@@ -644,7 +644,7 @@ namespace Proyecto2SIPC2
             }
             int filaDiag = fil + 1;
             int filaIn = fil + 1;
-            for (int col = posicionM[0] + 1; col < 8; col++)
+            for (int col = posicionM[0] + 1; col < columnas; col++)
             {
                 try
                 {
@@ -658,7 +658,7 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[col, filaDiag] == color && matriz[col + 1, filaDiag + 1] == colorT)
                     {
-                        if (posicionM[0] + movDiP < 8)
+                        if (posicionM[0] + movDiP < columnas)
                         {
                             for (int i = posicionM[0]; i < posicionM[0] + movDiP; i++)
                             {
@@ -690,7 +690,7 @@ namespace Proyecto2SIPC2
             }
             filaDiag = fil - 1;
             filaIn = fil - 1;
-            for (int col = posicionM[0] + 1; col < 8; col++)
+            for (int col = posicionM[0] + 1; col < columnas; col++)
             {
                 try
                 {
@@ -704,7 +704,7 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[col, filaDiag] == color && matriz[col + 1, filaDiag - 1] == colorT)
                     {
-                        if (posicionM[0] + movDiN < 8)
+                        if (posicionM[0] + movDiN < columnas)
                         {
                             for (int i = posicionM[0]; i < posicionM[0] + movDiN; i++)
                             {
@@ -747,7 +747,7 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[col, filaDiag] == color && matriz[col - 1, filaDiag + 1] == colorT)
                     {
-                        if (posicionM[0] - movDP < 8)
+                        if (posicionM[0] - movDP < columnas)
                         {
                             for (int i = posicionM[0]; i >= posicionM[0] - movDP; i--)
                             {
@@ -794,7 +794,7 @@ namespace Proyecto2SIPC2
                     }
                     if (matriz[col, filaDiag] == color && matriz[col - 1, filaDiag - 1] == colorT)
                     {
-                        if (posicionM[0] - movDN < 8)
+                        if (posicionM[0] - movDN < columnas)
                         {
                             for (int i = posicionM[0]; i >= posicionM[0] - movDN; i--)
                             {
@@ -823,7 +823,7 @@ namespace Proyecto2SIPC2
 
                 }
             }
-            Session["matriz"] = ImprimirMov(colorT, matriz);
+            Session["matriz"] = ImprimirMov(colorT, matriz, columnas, filas);
         }
         public Boolean MovimientosPosibles(Boolean turno, int columnas, int filas)
         {
@@ -999,7 +999,7 @@ namespace Proyecto2SIPC2
                         col = j;
                         for (int k = i; k < columnas; k++)
                         {
-                            if(i-1>=0 && j+1<8 && col>=0)
+                            if(i-1>=0 && j+1<filas && col>=0)
                             {
                                 if ((matriz[i - 1, j + 1] == 0) && (matriz[k, col] == colorT))
                                 {
@@ -1097,7 +1097,7 @@ namespace Proyecto2SIPC2
             Session["botones"] = botones;
             Session["matriz"] = matriz;
 
-            return HaveMovimientos(matriz);
+            return HaveMovimientos(matriz, columnas, filas);
 
         }
         public int[] ContarFichas(int[,] matriz)
@@ -1122,12 +1122,12 @@ namespace Proyecto2SIPC2
             fichasJugadas[1] = movimientosB;
             return fichasJugadas;
         }
-        public Boolean HaveMovimientos(int[,] matriz)
+        public Boolean HaveMovimientos(int[,] matriz, int columnas, int filas)
         {
             int movimientos = 0;
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < columnas; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < filas; j++)
                 {
                     if (matriz[i, j] == 3)
                     {
@@ -1193,7 +1193,7 @@ namespace Proyecto2SIPC2
             ficha.columna = posicion[0].ToString();
             ficha.fila = posicion[1].ToString();
             fichas.Add(ficha);
-            Movimiento(ficha, (Boolean)Session["turno"], matriz);
+            Movimiento(ficha, (Boolean)Session["turno"], matriz,8,8);
             ImprimirFicha(ficha);
 
             if (!turno)
@@ -1393,7 +1393,7 @@ namespace Proyecto2SIPC2
             }
             Session["matriz"] = matriz;
             ImprimirMatriz(matriz,8,8);
-            Limpiar();
+            Limpiar(8,8);
             
 
         }
