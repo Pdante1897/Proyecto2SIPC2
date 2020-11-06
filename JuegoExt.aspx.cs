@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 
 namespace Proyecto2SIPC2
 {
-    public partial class WebForm3 : System.Web.UI.Page
+    public partial class JuegoExt : System.Web.UI.Page
     {
         private List<Button> botonesM = new List<Button>();
         public List<Ficha> fichasM = new List<Ficha>();
@@ -32,18 +32,18 @@ namespace Proyecto2SIPC2
             }
             else
             {
-                if (Session["tablero"]!=null)
+                if (Session["tablero"] != null)
                 {
                     Tablero(int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue));
                     ImprimirBotones();
                     List<Ficha> fichas = (List<Ficha>)Session["fichas"];
                     Juego metodos = new Juego();
-                    
-                }                
+
+                }
             }
-            
-            }
-        
+
+        }
+
         public void ImprimirBotones()
         {
             Juego metodos = new Juego();
@@ -53,18 +53,18 @@ namespace Proyecto2SIPC2
                 item.Width = 60;
                 item.Height = 60;
             }
-            metodos.ImprimirFichas();
+            ImprimirFichas();
 
         }
-        public void Tablero(int columna, int fila) 
+        public void Tablero(int columna, int fila)
         {
             List<Button> lista = new List<Button>();
             Table tab = new Table();
-            for (int j = 0; j < fila+2; j++)
+            for (int j = 0; j < fila + 2; j++)
             {
                 TableRow fil = new TableRow();
                 tab.Rows.Add(fil);
-                for (int i = 0; i < columna+2; i++)
+                for (int i = 0; i < columna + 2; i++)
                 {
                     TableCell col = new TableCell();
                     if (i == 0 && j == 0 || i == columna + 1 && j == fila + 1 || i == 0 && j == fila + 1 || i == columna + 1 && j == 0)
@@ -96,7 +96,7 @@ namespace Proyecto2SIPC2
                         i = columna;
                         continue;
                     }
-                    else if (i == 1 && j == fila+1)
+                    else if (i == 1 && j == fila + 1)
                     {
                         for (int k = 0; k < columna; k++)
                         {
@@ -127,7 +127,7 @@ namespace Proyecto2SIPC2
                             col.Controls.Add(label);
                             col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                             fil.Cells.Add(col);
-                            
+
 
                         }
                         i = columna;
@@ -135,7 +135,7 @@ namespace Proyecto2SIPC2
 
 
                     }
-                    else if (i == 0 && (j >= 1 && j < fila+1))
+                    else if (i == 0 && (j >= 1 && j < fila + 1))
                     {
                         Label label = new Label();
                         col = new TableCell();
@@ -143,25 +143,25 @@ namespace Proyecto2SIPC2
                         {
                             char letra = Boton(i, j - 1).ElementAt(1);
                             char letra2 = Boton(i, j - 1).ElementAt(2);
-                            label.Text =".   "+letra.ToString()+letra2.ToString();
+                            label.Text = ".   " + letra.ToString() + letra2.ToString();
                         }
                         catch (Exception)
                         {
 
                             char letras = Boton(i, j - 1).ElementAt(1);
-                            label.Text = ".     "+ letras.ToString();
+                            label.Text = ".     " + letras.ToString();
                         }
-                        label.Font.Size=18;
+                        label.Font.Size = 18;
                         label.Width = 60;
                         col.Controls.Add(label);
                         col.Attributes.Add("style", "Height: 60px; Width: 60px; background-color: rgb(158,131,106); ");
                         fil.Cells.Add(col);
-                         
+
                         continue;
 
 
                     }
-                    else if (i == columna+1 && (j >= 1 && j < fila + 1))
+                    else if (i == columna + 1 && (j >= 1 && j < fila + 1))
                     {
                         Label label = new Label();
                         col = new TableCell();
@@ -187,13 +187,13 @@ namespace Proyecto2SIPC2
 
 
                     }
-                    else if (i>0)
+                    else if (i > 0)
                     {
                         col = new TableCell();
                         col.Attributes.Add("style", "height: 60px; border: 1px solid black; width: 60px; background-color: rgb(129,75,27); ");
                         Button boton = new Button();
                         boton.Click += new EventHandler(Click);
-                        boton.ID = Boton(i-1, j - 1);
+                        boton.ID = Boton(i - 1, j - 1);
                         System.Diagnostics.Debug.Write(boton.ID + " ");
                         boton.CssClass = "ficha";
                         boton.Attributes.Add("style", "height: 60px; border: none; width: 60px; border-radius: 100%; background-color: Transparent; ");
@@ -203,7 +203,7 @@ namespace Proyecto2SIPC2
                     }
 
 
-                    
+
 
                 }
                 System.Diagnostics.Debug.WriteLine("");
@@ -220,10 +220,11 @@ namespace Proyecto2SIPC2
         }
         public void Click(object sender, EventArgs args)
         {
-            List<Ficha> fichas=(List<Ficha>)Session["fichas"];
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
             Boolean turno = (Boolean)Session["turno"];
             Juego metodos = new Juego();
             Button button = sender as Button;
+            Boolean apertura= AperturaPersonalizada(false);
             if (fichas.Count >= 4)
             {
                 if (metodos.ValidadAccion(button))
@@ -234,7 +235,7 @@ namespace Proyecto2SIPC2
 
                 }
             }
-            else if (AperturaPersonalizada(false)) 
+            else if (apertura)
             {
                 if (metodos.ValidadAccion(button))
                 {
@@ -248,7 +249,7 @@ namespace Proyecto2SIPC2
                 }
             }
 
-            
+            ImprimirMatriz((int[,])Session["matriz"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
         }
         protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
@@ -303,7 +304,7 @@ namespace Proyecto2SIPC2
                     break;
                 case 11:
                     boton = "L" + j;
-                    
+
                     break;
                 case 12:
                     boton = "M" + j;
@@ -351,9 +352,9 @@ namespace Proyecto2SIPC2
                 string script = "alert('Debe elegir la misma cantidad de colores!');";
                 ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
             }
-            
+
         }
-        public void Iniciar() 
+        public void Iniciar()
         {
             Session["movimientosJ1"] = 0;
             Session["movimientosJ2"] = 0;
@@ -362,6 +363,8 @@ namespace Proyecto2SIPC2
             Session["matriz"] = new int[int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue)];
             Session["fichas"] = fichasM;
             Session["ultima"] = ultimaM;
+            Session["ultimaJ1"] = new Ficha();
+            Session["ultimaFichaJ2"] = new Ficha();
             Session["turno"] = false;
             Session["tablero"] = null;
             Tablero(int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue));
@@ -387,8 +390,14 @@ namespace Proyecto2SIPC2
         }
         public void Accion(Button button)
         {
+            LinkedList<String> Listaj1 = (LinkedList<String>)Session["coloresJ1"];
+            LinkedList<String> Listaj2 = (LinkedList<String>)Session["coloresJ2"];
+            Color color = new Color();
+            string nomColor;
             Juego metodos = new Juego();
             Ficha ultima = (Ficha)Session["ultima"];
+            Ficha ultimaJ1 = (Ficha)Session["ultimaJ1"];
+            Ficha ultimaJ2 = (Ficha)Session["ultimaFichaJ2"];
             Boolean turno = (Boolean)Session["turno"];
             List<Ficha> fichas = (List<Ficha>)Session["fichas"];
             int[,] matriz = (int[,])Session["matriz"];
@@ -396,13 +405,16 @@ namespace Proyecto2SIPC2
             int[] posicionM = metodos.Coordenada(button.ID);
             if (turno)
             {
-                ficha.color = "blanco";
+                color = ColoresTurno(turno, Listaj2, ultimaJ2);
+                nomColor = NomColor(color);
+                ficha.color = nomColor;
                 matriz[posicionM[0], posicionM[1]] = 1;
-
             }
             else
             {
-                ficha.color = "negro";
+                color = ColoresTurno(turno, Listaj1, ultimaJ1);
+                nomColor = NomColor(color);
+                ficha.color = nomColor;
                 matriz[posicionM[0], posicionM[1]] = 2;
 
             }
@@ -420,21 +432,156 @@ namespace Proyecto2SIPC2
             }
             ficha.fila = numero;
             fichas.Add(ficha);
-            metodos.Movimiento(ficha, turno, (int[,])Session["matriz"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
-            metodos.ImprimirFicha(ficha);
+
+            metodos.Movimiento(ficha, turno, (int[,])Session["matriz"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1,ficha.color);
+            ImprimirFicha(ficha, color);
 
             if (!turno)
             {
-                ultima.color = "negra";
+                ultima.color = nomColor;
+
             }
             else
             {
-                ultima.color = "blanca";
-            }
+                ultima.color = nomColor;
 
+            }
             Session["fichas"] = fichas;
             Session["ultima"] = ultima;
             Session["turno"] = !turno;
+        }
+        public Color ColoresTurno(Boolean turno, LinkedList<String> Lista, Ficha ficha)
+        {
+            Boolean estado= false;
+            string color = null;
+            if (ficha.color==null || Lista.Last() == ficha.color)
+            {
+                color = Lista.First();
+                System.Diagnostics.Debug.WriteLine(Lista.Last());
+            }
+            else
+            {
+                foreach (String item in Lista)
+                {
+                    if (estado)
+                    {
+                        color = item;
+                        break;
+                    }
+                    else
+                    {
+                        if (item==ficha.color)
+                        {
+                            estado = true;
+                        }
+                    }
+                }
+                
+            }
+            System.Diagnostics.Debug.WriteLine(color);
+            if (turno)
+            {
+                ficha.color = color;
+                Session["ultimaFichaJ2"] = ficha;
+
+            }
+            else 
+            {
+                ficha.color = color;
+                Session["ultimaJ1"] = ficha;
+
+            }
+
+            return Colores(color);
+        }
+
+        public Color Colores(string color) 
+        {
+            Color ficha = Color.Transparent;
+            switch (color) 
+            {
+                case "negro":
+                    ficha= Color.Black;
+                    break;
+                case "blanco":
+                    ficha = Color.White;
+                    break;
+
+                case "rojo":
+                    ficha = Color.Red;
+                    break;
+                case "amarillo":
+                    ficha = Color.Yellow;
+                    break;
+                case "azul":
+                    ficha = Color.Blue;
+                    break;
+                case "anaranjado":
+                    ficha = Color.Orange;
+                    break;
+                case "verde":
+                    ficha = Color.Green;
+                    break;
+                case "violeta":
+                    ficha = Color.Violet;
+                    break;
+                case "celeste":
+                    ficha = Color.Cyan;
+                    break;
+                case "gris":
+                    ficha = Color.Gray;
+                    break;
+                default:
+                    break;
+            }
+            return ficha;
+        }
+
+        public string NomColor(Color color) 
+        {
+            string ficha = null;
+            if (color == Color.Black)
+            {
+                ficha = "negro";
+            }
+            else if (color == Color.White)
+            {
+                ficha = "blanco";
+            }
+            else if (color == Color.Red)
+            {
+                ficha = "rojo";
+            }
+            else if (color == Color.Yellow)
+            {
+                ficha = "amarillo";
+            }
+            else if (color == Color.Blue)
+            {
+                ficha = "azul";
+            }
+            else if (color == Color.Orange)
+            {
+                ficha = "anaranjado";
+            }
+            else if (color == Color.Green)
+            {
+                ficha = "verde";
+            }
+            else if (color == Color.Violet)
+            {
+                ficha = "violeta";
+            }
+            else if (color == Color.Cyan)
+            {
+                ficha = "celeste";
+            }
+            else if (color == Color.Gray)
+            {
+                ficha = "gris";
+            }
+            return ficha;
+
         }
         public Boolean AperturaPersonalizada(Boolean estado) 
         {
@@ -473,6 +620,42 @@ namespace Proyecto2SIPC2
                 return false;
             }
             return true;
+        }
+        public void ImprimirFicha(Ficha ficha, Color color)
+        {
+            List<Button> botones = (List<Button>)Session["botones"];
+
+            foreach (Button item in botones)
+            {
+                if (item.ID.Equals(ficha.columna + ficha.fila))
+                {
+                    item.Attributes.Add("style", "Height: 60px; Width: 60px; border-radius: 100%;");
+                    item.BackColor = color;
+                }
+            }
+            Session["botones"] = botones;
+
+        }
+        public void ImprimirFichas()
+        {
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            List<Button> botones = (List<Button>)Session["botones"];
+
+            foreach (Button item in botones)
+            {
+                foreach (Ficha fi in fichas)
+                {
+                    if (item.ID.Equals(fi.columna + fi.fila))
+                    {
+                            item.Attributes.Add("style", "height: 60px; width: 60px; border-radius: 100%;");
+                            item.BackColor = Colores(fi.color);
+                       
+
+                    }
+                }
+            }
+            Session["botones"] = botones;
+
         }
 
         protected void CheckBox_CheckedChanged(object sender, EventArgs e) 
@@ -551,22 +734,22 @@ namespace Proyecto2SIPC2
         public Boolean ListadeColores() 
         {
 
-            List<String> jugador1 = new List<string>();
-            List<String> jugador2 = new List<string>();
+            LinkedList<String> jugador1 = new LinkedList<string>();
+            LinkedList<String> jugador2 = new LinkedList<string>();
             List<CheckBox> listaJ1 = (List<CheckBox>)Session["checkJ1"];
             List<CheckBox> listaJ2 = (List<CheckBox>)Session["checkJ2"];
             foreach (CheckBox item in listaJ1)
             {
                 if (item.Checked)
                 {
-                    jugador1.Add(item.Text);
+                    jugador1.AddLast(item.Text.ToLower().Trim());
                 }
             }
             foreach (CheckBox item in listaJ2)
             {
                 if (item.Checked)
                 {
-                    jugador2.Add(item.Text);
+                    jugador2.AddLast(item.Text.ToLower().Trim());
                 }
             }
             if (jugador1.Count==0 && jugador2.Count==0)

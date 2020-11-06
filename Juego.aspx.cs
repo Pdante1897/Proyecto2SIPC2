@@ -426,7 +426,7 @@ namespace Proyecto2SIPC2
             }
             System.Diagnostics.Debug.WriteLine(" ");
         }
-        public int[,] ImprimirMov(int turno, int[,] matriz, int columnas, int filas)
+        public int[,] ImprimirMov(int turno, int[,] matriz, int columnas, int filas, string color)
         {
             List<Ficha> fichas = (List<Ficha>)Session["fichas"];
             for (int i = 0; i < columnas; i++)
@@ -442,11 +442,11 @@ namespace Proyecto2SIPC2
                             {
                                 if (turno == 1)
                                 {
-                                    item.color = "blanco";
+                                    item.color = color;
                                 }
                                 else if (turno == 2)
                                 {
-                                    item.color = "negro";
+                                    item.color = color;
                                 }
                             }
                         }
@@ -457,11 +457,20 @@ namespace Proyecto2SIPC2
 
             }
             Session["fichas"] = fichas;
-            ImprimirFichas();
+            if (Session["tablero"] == null) 
+            {
+                ImprimirFichas();
+
+            }
+            else
+            {
+                JuegoExt juego = new JuegoExt();
+                juego.ImprimirFichas();
+            }
             return matriz;
 
         }
-        public void Movimiento(Ficha ficha, Boolean turno, int[,] matriz, int columnas, int filas)
+        public void Movimiento(Ficha ficha, Boolean turno, int[,] matriz, int columnas, int filas,string colorF)
         {
 
             int color, colorT, movHP = 0, movHN = 0, movVN = 0, movVP = 0, movDiP = 0, movDiN = 0, movDP = 0, movDN = 0;
@@ -823,7 +832,7 @@ namespace Proyecto2SIPC2
 
                 }
             }
-            Session["matriz"] = ImprimirMov(colorT, matriz, columnas, filas);
+            Session["matriz"] = ImprimirMov(colorT, matriz, columnas, filas, colorF);
         }
         public Boolean MovimientosPosibles(Boolean turno, int columnas, int filas)
         {
@@ -1193,7 +1202,7 @@ namespace Proyecto2SIPC2
             ficha.columna = posicion[0].ToString();
             ficha.fila = posicion[1].ToString();
             fichas.Add(ficha);
-            Movimiento(ficha, (Boolean)Session["turno"], matriz,8,8);
+            Movimiento(ficha, (Boolean)Session["turno"], matriz,8,8,ficha.color);
             ImprimirFicha(ficha);
 
             if (!turno)
@@ -1718,6 +1727,51 @@ namespace Proyecto2SIPC2
                 case 7:
                     boton = "H" + j;
 
+                    break;
+                case 8:
+                    boton = "I" + j;
+                    break;
+                case 9:
+                    boton = "J" + j;
+
+                    break;
+                case 10:
+                    boton = "K" + j;
+
+                    break;
+                case 11:
+                    boton = "L" + j;
+
+                    break;
+                case 12:
+                    boton = "M" + j;
+
+                    break;
+                case 13:
+                    boton = "N" + j;
+
+                    break;
+                case 14:
+                    boton = "O" + j;
+
+                    break;
+                case 15:
+                    boton = "P" + j;
+
+                    break;
+                case 16:
+                    boton = "Q" + j;
+                    break;
+                case 17:
+                    boton = "R" + j;
+
+                    break;
+                case 18:
+                    boton = "S" + j;
+
+                    break;
+                case 19:
+                    boton = "T" + j;
                     break;
                 default:
                     break;

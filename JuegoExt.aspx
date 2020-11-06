@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="JuegoExt.aspx.cs" Inherits="Proyecto2SIPC2.WebForm3" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="JuegoExt.aspx.cs" Inherits="Proyecto2SIPC2.JuegoExt" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <link rel="stylesheet" href="../Content/EstiloTab.css">
     <div style="height: 60px">
