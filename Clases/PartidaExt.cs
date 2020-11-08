@@ -5,9 +5,7 @@ using System.Web;
 
 namespace Proyecto2SIPC2.Clases
 {
-    public class Tablero
+    public class PartidaExt
     {
-        public int columnas;
-        public int filas;
     }
 }

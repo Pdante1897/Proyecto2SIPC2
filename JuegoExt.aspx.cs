@@ -18,6 +18,7 @@ namespace Proyecto2SIPC2
         public Boolean partida;
         protected void Page_Load(object sender, EventArgs e)
         {
+            
             AgregarCheck();
             if (!(Boolean)Session["partida"])
             {
@@ -34,13 +35,101 @@ namespace Proyecto2SIPC2
             {
                 if (Session["tablero"] != null)
                 {
-                    Tablero(int.Parse(DropDownList2.SelectedValue), int.Parse(DropDownList1.SelectedValue));
+                    Tablero tablero = new Tablero();
+                    tablero.columnas = int.Parse(DropDownList2.SelectedValue);
+                    tablero.filas = int.Parse(DropDownList1.SelectedValue);
+                    Tablero(tablero.columnas, tablero.filas);
                     ImprimirBotones();
                     List<Ficha> fichas = (List<Ficha>)Session["fichas"];
                     Juego metodos = new Juego();
 
                 }
             }
+
+        }
+        public void ValidarGanadores()
+        {
+            Juego metodos = new Juego();
+            Partida partida = new Partida();
+            int[,] matriz = (int[,])Session["matriz"];
+            int[] fichas = metodos.ContarFichas(matriz);
+            int fichasN = fichas[0];
+            int fichasB = fichas[1];
+            int fjugador1, fjugador2;
+            Label10.Text = "" + (int)Session["movimientosJ1"];
+            Label18.Text = "" + (int)Session["movimientosJ2"];
+            if ((string)Session["colorficha"] == "Negro")
+            {
+                fjugador1 = fichasN;
+                fjugador2 = fichasB;
+                Label8.Text = "" + fichasN;
+                Label16.Text = "" + fichasB;
+
+            }
+            else
+            {
+                fjugador1 = fichasB;
+                fjugador2 = fichasN;
+                Label8.Text = "" + fichasB;
+                Label16.Text = "" + fichasN;
+            }
+            Boolean movOtroJ = metodos.MovimientosPosibles(!(Boolean)Session["turno"], 8, 8);
+            metodos.Limpiar(8, 8);
+
+            Boolean movTurnoAct = metodos.MovimientosPosibles((Boolean)Session["turno"], 8, 8);
+            if (fichasB + fichasN == 64 || !movTurnoAct && !movOtroJ)
+            {
+                string resultado = null;
+                if (fichasN > fichasB)
+                {
+                    string script = "alert('Ganan las Negras!');";
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+                    if ((string)Session["colorficha"] == "Negro")
+                    {
+                        resultado = "Ganador";
+                    }
+                    else
+                    {
+                        resultado = "Perdedor";
+                    }
+                }
+                else if (fichasB > fichasN)
+                {
+                    string script = "alert('Ganan las Blancas!');";
+
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+                    if ((string)Session["colorficha"] == "Blanco")
+                    {
+                        resultado = "Ganador";
+                    }
+                    else
+                    {
+                        resultado = "Perdedor";
+                    }
+                }
+                else if (fichasB == fichasN)
+                {
+                    string script = "alert('Empate!');";
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+                    resultado = "Empate";
+
+                }
+                //partida = Datos(fjugador1, fjugador2);
+                partida.resultado = resultado;
+                //RegistrarPartida(partida);
+            }
+            else if (movTurnoAct)
+            {
+
+            }
+            else if (!movTurnoAct)
+            {
+                Session["turno"] = !(Boolean)Session["turno"];
+                string script = "alert('No puedes mover! :c');";
+                ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
+                metodos.MovimientosPosibles((Boolean)Session["turno"], 8, 8);
+            }
+
 
         }
 
