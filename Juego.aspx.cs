@@ -67,7 +67,9 @@ namespace Proyecto2SIPC2
         }
         public void TurnoMaquina() 
         {
-            ValidadAccion(Maquina());
+            Button boton = Maquina(8, 8);
+            ValidadAccion(boton);
+            Accion(boton);
             Limpiar(8,8);
             MovimientosPosibles((Boolean)Session["turno"],8,8);
             ImprimirFichas();
@@ -78,16 +80,16 @@ namespace Proyecto2SIPC2
             
 
         }
-        public Button Maquina()
+        public Button Maquina(int columnas, int filas)
         {
             List<Button> botones = (List<Button>)Session["botones"];
             int[,] matriz = (int[,])Session["matriz"];
             List<int[]> movimientos = new List<int[]>();
             int contador = 0;
             Random numR = new Random();
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < columnas; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < filas; j++)
                 {
                     int[] ficha = new int[3];
                     if (matriz[i,j]==3)
@@ -155,7 +157,7 @@ namespace Proyecto2SIPC2
         {
             Partida partida = new Partida();
             int[,] matriz = (int[,])Session["matriz"];
-            int[] fichas = ContarFichas(matriz);
+            int[] fichas = ContarFichas(matriz,8,8);
             int fichasN = fichas[0];
             int fichasB = fichas[1];
             int fjugador1, fjugador2;
@@ -1109,13 +1111,13 @@ namespace Proyecto2SIPC2
             return HaveMovimientos(matriz, columnas, filas);
 
         }
-        public int[] ContarFichas(int[,] matriz)
+        public int[] ContarFichas(int[,] matriz,int columnas, int filas)
         {
             int movimientosN = 0, movimientosB = 0;
             int[] fichasJugadas = new int[2];
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < columnas; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < filas; j++)
                 {
                     if (matriz[i, j] == 1)
                     {

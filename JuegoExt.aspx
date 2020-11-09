@@ -12,10 +12,11 @@
         <div  style="border: 2px solid white; position: absolute; width: 296px; height: 770px; top: 20%; left: 2%;">
             <asp:Label ID="Label1" runat="server" Style = "position: absolute; top: 41px; left: 105px; height: 20px;" Text="Cargar Partida" ForeColor="White" Visible="True"></asp:Label>
             <asp:FileUpload ID="FileUpload1" runat="server" Style = "position: absolute; top: 81px; left: 14px;" />
-            <asp:Button Style="position: absolute; top: 139px; left: 116px; height: 28px; width: 68px;" ID="Button1" runat="server" Text="Cargar"/>    
-            <asp:Label ID="Label2" runat="server" Style = "position: absolute; top: 212px; left: 102px;" Text="Guardar Partida" ForeColor="White"></asp:Label>
-            <asp:Button Style="position: absolute; top: 269px; left: 117px; height: 28px; width: 68px;" ID="Button2" runat="server" Text="Guardar" />    
-            <asp:Label ID="Label20" runat="server" Style = "position: absolute; top: 316px; left: 106px;" Text="Nueva Partida" ForeColor="White"></asp:Label>
+            <asp:Button Style="position: absolute; top: 139px; left: 116px; height: 28px; width: 68px;" ID="Button1" runat="server" Text="Cargar" OnClick="Button1_Click"/>    
+            <asp:Label ID="Label20" runat="server" Style = "position: absolute; top: 262px; left: 108px;" Text="Nueva Partida" ForeColor="White"></asp:Label>
+            <asp:CheckBox ID="CheckBox21" runat="server"  Style = "position: absolute; top: 322px; left: 154px;" Text="Modo inverso" ForeColor="White" />
+        
+
             <asp:Button Style="position: absolute; top: 693px; left: 110px; height: 29px; width: 68px;" ID="Button3" runat="server" Text="Iniciar" OnClick="Button3_Click" />    
             <asp:DropDownList ID="DropDownList1" Style="position: absolute; top: 368px; left: 61px;" runat="server">
                 <asp:ListItem>6</asp:ListItem>
@@ -62,6 +63,7 @@
             <asp:CheckBox ID="CheckBox18" runat="server"  Style = "position: absolute; top: 600px; left: 55%;" Text="Violeta" ForeColor="White" OnCheckedChanged="CheckBox_CheckedChanged"  AutoPostBack="true"/>
             <asp:CheckBox ID="CheckBox19" runat="server"  Style = "position: absolute; top: 625px; left: 55%;" Text="Celeste" ForeColor="White" OnCheckedChanged="CheckBox_CheckedChanged"  AutoPostBack="true"/>
             <asp:CheckBox ID="CheckBox20" runat="server"  Style = "position: absolute; top: 650px; left: 55%;" Text="Gris" ForeColor="White" OnCheckedChanged="CheckBox_CheckedChanged"  AutoPostBack="true"/>
+                    <asp:CheckBox ID="CheckBox22" runat="server" ForeColor="White" Style="position: absolute; top: 323px; left: 16px;" Text="Ap Personalizada" />
       </ContentTemplate>
       </asp:UpdatePanel>
                

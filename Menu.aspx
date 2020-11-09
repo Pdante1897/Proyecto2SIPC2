@@ -23,6 +23,14 @@
            
         </div>
         <div style="height: 500px; position:absolute; top: 20%; right: 20%; width: 450px; border: 2px solid white;">
+            <asp:Label ID="Label7" Style="position: absolute; top: 40px; left: 35%;" runat="server" Text="Jugar Xtream!" ForeColor="White" Font-Size="X-Large"></asp:Label>
+            <asp:Label ID="Label8" Style="position: absolute; top: 100px; left: 35%;" runat="server" Text="Partida 1 Jugador." ForeColor="White" Font-Size="Large"></asp:Label>
+            <asp:Button ID="Button4" Style="position: absolute; top: 130px; left: 39%;" runat="server" Text="Nueva Partida" OnClick="Button4_Click" />
+            <asp:Label ID="Label9" Style="position: absolute; top: 180px; left: 34%;" runat="server" Text="Partida 2 Jugadores" ForeColor="White" Font-Size="Large"></asp:Label>
+            <asp:Label ID="Label10" Style="position: absolute; top: 210px; left: 37%;" runat="server" Text="Nombre Jugador 2." ForeColor="White" Font-Size="Medium"></asp:Label>
+            <asp:TextBox ID="TextBox2" Style="position: absolute; top: 240px; left: 31%;" runat="server"></asp:TextBox>
+            <asp:Button ID="Button5" Style="position: absolute; top: 280px; left: 39%;" runat="server" Text="Nueva Partida" OnClick="Button5_Click"  />
+            
            
         </div>
     </div>

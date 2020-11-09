@@ -51,5 +51,18 @@ namespace Proyecto2SIPC2
             }
             Response.Redirect("~/juego.aspx");
         }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            Session["jugador2"] = false;
+            Response.Redirect("~/juegoExt.aspx");
+        }
+
+        protected void Button5_Click(object sender, EventArgs e)
+        {
+            Session["jugador2"] = true;
+            Session["j2"] = TextBox2.Text;
+            Response.Redirect("~/juegoExt.aspx");
+        }
     }
 }

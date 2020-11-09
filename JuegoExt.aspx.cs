@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml;
 
 namespace Proyecto2SIPC2
 {
@@ -45,69 +47,240 @@ namespace Proyecto2SIPC2
 
                 }
             }
+            Label4.Text = (string)Session["usuario"];
+            if (!(Boolean)Session["jugador2"])
+            {
+                Label12.Text = "Maquina";
+            }
+            else
+            {
+                Label12.Text = (string)Session["j2"];
+            }
+            MostrarTurno();
 
         }
-        public void ValidarGanadores()
+        protected void Button1_Click(object sender, EventArgs e)
         {
-            Juego metodos = new Juego();
-            Partida partida = new Partida();
-            int[,] matriz = (int[,])Session["matriz"];
-            int[] fichas = metodos.ContarFichas(matriz);
-            int fichasN = fichas[0];
-            int fichasB = fichas[1];
-            int fjugador1, fjugador2;
-            Label10.Text = "" + (int)Session["movimientosJ1"];
-            Label18.Text = "" + (int)Session["movimientosJ2"];
-            if ((string)Session["colorficha"] == "Negro")
+
+            string extension = Path.GetExtension(FileUpload1.FileName);
+            System.Diagnostics.Debug.WriteLine("hola mundo");
+            if (FileUpload1.HasFile)
             {
-                fjugador1 = fichasN;
-                fjugador2 = fichasB;
-                Label8.Text = "" + fichasN;
-                Label16.Text = "" + fichasB;
+                if (extension.Equals(".xml"))
+                {
+                    FileUpload1.SaveAs(Server.MapPath("~/Xml/partidaExt.xml"));
+                    {
+                        CargarPartida();
+                        Page.ClientScript.RegisterStartupScript(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Se cargo la partida con exito!" + "');</script>");
+
+                    }
+                }
+                else
+                {
+                    Page.ClientScript.RegisterStartupScript(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Error! El archivo debe ser tipo XML" + "');</script>");
+                }
+            }
+            else
+            {
+                Page.ClientScript.RegisterStartupScript(Page.GetType(), "MessageBox", "<script language='javascript'>alert('" + "Error! Seleccione un archivo XML" + "');</script>");
+            }
+
+        }
+
+        public void CargarPartida()
+        {
+            LinkedList<String> Listaj1 = (LinkedList<String>)Session["coloresJ1"];
+            LinkedList<String> Listaj2 = (LinkedList<String>)Session["coloresJ2"];
+            Juego metodos = new Juego();
+            Ficha ultima = new Ficha();
+            List<Ficha> fichas = new List<Ficha>();
+            XmlDocument archivo = new XmlDocument();
+            archivo.Load(Server.MapPath("~/Xml/partidaExt.xml"));
+            int numero = 0;
+            Boolean turno;
+            int jugador=0;
+            Tablero tab = new Tablero();
+            foreach (XmlElement item in archivo.DocumentElement)
+            {
+                Ficha fi = new Ficha();
+                for (int i = 0; i < item.ChildNodes.Count; i++)
+                    
+                {
+                    string valor = item.ChildNodes[i].InnerText.Trim();
+                    String nombre = item.ChildNodes[i].LocalName;
+                    switch (item.ChildNodes[i].LocalName.ToLower())
+                    {
+                        case "columnas":
+                            tab.columnas = int.Parse(valor);
+                            break;
+                        case "filas":
+                            tab.filas = int.Parse(valor);
+                            break;
+                        case "jugador1":
+                            jugador = 1;
+                            break;
+                        case "jugador2":
+                            jugador = 2;
+                            break;
+                        case "tablero":
+                            jugador = 0;
+                            break;
+                        case "color":
+                            if (jugador==1)
+                            {
+                                Listaj1.AddLast(valor);
+                            }
+                            else if (jugador == 2)
+                            {
+                                Listaj2.AddLast(valor);
+                            }
+                            else
+                            {
+                                fi.color = valor;
+                            }
+                            break;
+                        case "columna":
+                            fi.columna = valor;
+                            break;
+                        case "fila":
+                            fi.fila = valor;
+                            break;
+                        case "siguienteTiro":
+                            fi.color = valor;
+                            break;
+                        case "modalidad":
+                            if (valor=="inverso")
+                            {
+                                Session["inverso"] = true;
+                                CheckBox21.Checked = true;
+                            }
+                            else
+                            {
+                                Session["inverso"] = false;
+                                CheckBox21.Checked = false;
+
+                            }
+                            break;
+                        default:
+                            numero++;
+                            Console.WriteLine(numero);
+                            break;
+                    }
+                }
+                if (fi.columna == null)
+                {
+                    ultima = fi;
+                }
+                else
+                {
+                    fichas.Add(fi);
+                }
+
+            }
+
+            Session["fichas"] = fichas;
+            Session["ultima"] = ultima;
+            Session["coloresJ1"] = Listaj1;
+            Session["coloresJ2"] = Listaj2; 
+            Session["columnas"] = tab.columnas-1;
+            Session["filas"] = tab.filas-1;
+            Session["inverso"] = true;
+
+            Tablero(tab.columnas, tab.filas);
+            LimpiarTablero(fichas, tab, Listaj1, Listaj2);
+            ImprimirFichas();
+            if (ultima.color == "negro")
+            {
+
+                turno = false;
+                Session["turno"] = turno;
 
             }
             else
             {
-                fjugador1 = fichasB;
-                fjugador2 = fichasN;
-                Label8.Text = "" + fichasB;
-                Label16.Text = "" + fichasN;
-            }
-            Boolean movOtroJ = metodos.MovimientosPosibles(!(Boolean)Session["turno"], 8, 8);
-            metodos.Limpiar(8, 8);
+                turno = true;
+                Session["turno"] = turno;
 
-            Boolean movTurnoAct = metodos.MovimientosPosibles((Boolean)Session["turno"], 8, 8);
-            if (fichasB + fichasN == 64 || !movTurnoAct && !movOtroJ)
+            }
+            metodos.MovimientosPosibles(turno, tab.columnas, tab.filas);
+            ValidarGanadores();
+            MostrarTurno();
+
+
+        }
+        public void LimpiarTablero(List<Ficha> fichas,Tablero tab, LinkedList<string> listaJ1, LinkedList<string> listaJ2)
+        {
+            Juego metodos = new Juego();
+            int[,] matriz = new int[tab.columnas, tab.filas];
+            foreach (Ficha item in fichas)
+            {
+                int[] coor = metodos.Coordenada(item.columna + item.fila);
+                if (item.color == listaJ1.Find(item.color).Value)
+                {
+                    matriz[coor[0], coor[1]] = 2;
+                }
+                else if(item.color == listaJ2.Find(item.color).Value)
+                {
+                    matriz[coor[0], coor[1]] = 1;
+                }
+            }
+            Session["matriz"] = matriz;
+            ImprimirMatriz(matriz, tab.columnas, tab.filas);
+            metodos.Limpiar(tab.columnas, tab.filas);
+
+
+        }
+
+        public void ValidarGanadores()
+        {
+            int columnas = (int)Session["columnas"]+1;
+            int filas = (int)Session["filas"]+1;
+            Juego metodos = new Juego();
+            Partida partida = new Partida();
+            int[,] matriz = (int[,])Session["matriz"];
+            int[] fichas = metodos.ContarFichas(matriz,columnas,filas);
+            ImprimirMatriz(matriz,columnas,filas);
+            int fichasJ1 = fichas[0];
+            int fichasJ2 = fichas[1];
+            int fjugador1, fjugador2;
+            Boolean condicion1 = fichasJ1 > fichasJ2;
+            Boolean condicion2 = fichasJ1 < fichasJ2;
+            Boolean modoInverso = (Boolean)Session["inverso"];
+            if (modoInverso)
+            {
+                condicion1 = !condicion1;
+                condicion2 = !condicion2;
+
+            }
+            Label10.Text = "" + (int)Session["movimientosJ1"];
+            Label18.Text = "" + (int)Session["movimientosJ2"];
+          
+                fjugador1 = fichasJ1;
+                fjugador2 = fichasJ2;
+                Label8.Text = "" + fichasJ1;
+                Label16.Text = "" + fichasJ2;
+
+            Boolean movOtroJ = metodos.MovimientosPosibles(!(Boolean)Session["turno"], columnas, filas);
+            metodos.Limpiar(columnas, filas);
+
+            Boolean movTurnoAct = metodos.MovimientosPosibles((Boolean)Session["turno"], columnas, filas);
+            if (fichasJ1 + fichasJ2 == columnas * filas|| !movTurnoAct && !movOtroJ)
             {
                 string resultado = null;
-                if (fichasN > fichasB)
+                if (condicion1)
                 {
-                    string script = "alert('Ganan las Negras!');";
+                    string script = "alert('Gana Jugador 1!');";
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
-                    if ((string)Session["colorficha"] == "Negro")
-                    {
-                        resultado = "Ganador";
-                    }
-                    else
-                    {
-                        resultado = "Perdedor";
-                    }
+                    resultado = "Ganador";
                 }
-                else if (fichasB > fichasN)
+                else if (condicion2)
                 {
-                    string script = "alert('Ganan las Blancas!');";
+                    string script = "alert('Gana Jugador 2!');";
 
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
-                    if ((string)Session["colorficha"] == "Blanco")
-                    {
-                        resultado = "Ganador";
-                    }
-                    else
-                    {
-                        resultado = "Perdedor";
-                    }
+                    resultado = "Perdedor";
                 }
-                else if (fichasB == fichasN)
+                else if (fichasJ1 == fichasJ2)
                 {
                     string script = "alert('Empate!');";
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
@@ -127,11 +300,27 @@ namespace Proyecto2SIPC2
                 Session["turno"] = !(Boolean)Session["turno"];
                 string script = "alert('No puedes mover! :c');";
                 ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", script, true);
-                metodos.MovimientosPosibles((Boolean)Session["turno"], 8, 8);
+                metodos.MovimientosPosibles((Boolean)Session["turno"], columnas, filas);
             }
 
 
         }
+        public void SumTurno()
+        {
+
+            if (((Boolean)Session["turno"]))
+            {
+                Session["movimientosJ2"] = (int)Session["movimientosJ2"] + 1;
+
+            }
+            else
+            {
+                Session["movimientosJ1"] = (int)Session["movimientosJ1"] + 1;
+
+            }
+
+        }
+
 
         public void ImprimirBotones()
         {
@@ -307,13 +496,12 @@ namespace Proyecto2SIPC2
 
             }
         }
-        public void Click(object sender, EventArgs args)
+        public void TurnoMaquina(int columnas, int filas)
         {
             List<Ficha> fichas = (List<Ficha>)Session["fichas"];
-            Boolean turno = (Boolean)Session["turno"];
             Juego metodos = new Juego();
-            Button button = sender as Button;
-            Boolean apertura= AperturaPersonalizada(false);
+            Button button = metodos.Maquina(columnas, filas);
+            Boolean apertura = AperturaPersonalizada(false);
             if (fichas.Count >= 4)
             {
                 if (metodos.ValidadAccion(button))
@@ -321,7 +509,7 @@ namespace Proyecto2SIPC2
                     Accion(button);
                     metodos.Limpiar((int)Session["columnas"] + 1, (int)Session["filas"] + 1);
                     metodos.MovimientosPosibles((Boolean)Session["turno"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
-
+                    ValidarGanadores();
                 }
             }
             else if (apertura)
@@ -334,11 +522,91 @@ namespace Proyecto2SIPC2
                         metodos.MovimientosPosibles((Boolean)Session["turno"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
 
                     }
-
+                    int[,] matriz = (int[,])Session["matriz"];
+                    int[] fichasT = metodos.ContarFichas(matriz, columnas, filas);
+                    ImprimirMatriz(matriz, columnas, filas);
+                    int fichasJ1 = fichasT[0];
+                    int fichasJ2 = fichasT[1];
+                    Label10.Text = "" + (int)Session["movimientosJ1"];
+                    Label18.Text = "" + (int)Session["movimientosJ2"];
+                    Label8.Text = "" + fichasJ1;
+                    Label16.Text = "" + fichasJ2;
                 }
+            }
+            MostrarTurno();
+
+        }
+        public void MostrarTurno()
+        {
+
+            if ((!(Boolean)Session["turno"]))
+            {
+                Label19.Text = "Turno: Jugador 1";
+            }
+            else
+            {
+                Label19.Text = "Turno: Jugador 2";
+            }
+
+        }
+
+        public void Click(object sender, EventArgs args)
+        {
+
+            int columnas = (int)Session["columnas"] + 1;
+            int filas = (int)Session["filas"] + 1;
+            Button button = sender as Button;
+            Juego metodos = new Juego();
+            Boolean validar = metodos.ValidadAccion(button);
+            TurnoJugador(button);
+            if (validar && !(Boolean)Session["jugador2"])
+            {
+                TurnoMaquina(columnas, filas);
             }
 
             ImprimirMatriz((int[,])Session["matriz"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+            MostrarTurno();
+        }
+        public void TurnoJugador(Button button) 
+
+        {
+            int columnas = (int)Session["columnas"] + 1;
+            int filas = (int)Session["filas"] + 1;
+            List<Ficha> fichas = (List<Ficha>)Session["fichas"];
+            Boolean turno = (Boolean)Session["turno"];
+            Juego metodos = new Juego();
+            Boolean apertura = AperturaPersonalizada(false);
+            if (fichas.Count >= 4)
+            {
+                if (metodos.ValidadAccion(button))
+                {
+                    Accion(button);
+                    metodos.Limpiar((int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+                    metodos.MovimientosPosibles((Boolean)Session["turno"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+                    ValidarGanadores();
+                }
+            }
+            else if (apertura)
+            {
+                if (metodos.ValidadAccion(button))
+                {
+                    Accion(button);
+                    if (fichas.Count == 4)
+                    {
+                        metodos.MovimientosPosibles((Boolean)Session["turno"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+
+                    }
+                    int[,] matriz = (int[,])Session["matriz"];
+                    int[] fichasT = metodos.ContarFichas(matriz, columnas, filas);
+                    ImprimirMatriz(matriz, columnas, filas);
+                    int fichasJ1 = fichasT[0];
+                    int fichasJ2 = fichasT[1];
+                    Label10.Text = "" + (int)Session["movimientosJ1"];
+                    Label18.Text = "" + (int)Session["movimientosJ2"];
+                    Label8.Text = "" + fichasJ1;
+                    Label16.Text = "" + fichasJ2;
+                }
+            }
         }
         protected void UpdatePanel1_Load(object sender, EventArgs e)
         {
@@ -445,6 +713,16 @@ namespace Proyecto2SIPC2
         }
         public void Iniciar()
         {
+            if (CheckBox21.Checked)
+            {
+                Session["inverso"] = true;
+
+            }
+            else
+            {
+                Session["inverso"] = false;
+
+            }
             Session["movimientosJ1"] = 0;
             Session["movimientosJ2"] = 0;
             Session["partida"] = true;
@@ -462,6 +740,7 @@ namespace Proyecto2SIPC2
             AperturaPersonalizada(true);
             ImprimirBotones();
             ImprimirMatriz((int[,])Session["matriz"], (int)Session["columnas"] + 1, (int)Session["filas"] + 1);
+            MostrarTurno();
         }
         public void ImprimirMatriz(int[,] matriz, int columnas, int filas)
         {
@@ -538,6 +817,7 @@ namespace Proyecto2SIPC2
             Session["fichas"] = fichas;
             Session["ultima"] = ultima;
             Session["turno"] = !turno;
+            SumTurno();
         }
         public Color ColoresTurno(Boolean turno, LinkedList<String> Lista, Ficha ficha)
         {
